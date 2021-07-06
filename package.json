@@ -1,0 +1,33 @@
+{
+  "name": "anapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev src/server.ts",
+    "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js"
+  },
+  "repository": "git+https://github.com/TCC-AN/anapi.git",
+  "author": "gusgalote",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TCC-AN/anapi/issues"
+  },
+  "homepage": "https://github.com/TCC-AN/anapi#readme",
+  "devDependencies": {
+    "@types/express": "^4.17.12",
+    "@types/uuid": "^8.3.0",
+    "ts-node-dev": "^1.1.6",
+    "typescript": "^4.3.4"
+  },
+  "dependencies": {
+    "class-transformer": "^0.4.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "pg": "^8.6.0",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.34",
+    "uuid": "^8.3.2"
+  }
+}

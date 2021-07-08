@@ -12,6 +12,10 @@ export class CreateVolunteer1625575198568 implements MigrationInterface {
             isPrimary: true,
           },
           {
+            name: "name",
+            type: "varchar",
+          },
+          {
             name: "email",
             type: "varchar",
           },
@@ -27,6 +31,7 @@ export class CreateVolunteer1625575198568 implements MigrationInterface {
           {
             name: "address_id",
             type: "uuid",
+            isUnique: true,
           },
           {
             name: "created_at",

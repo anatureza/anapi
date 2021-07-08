@@ -17,6 +17,9 @@ class Volunteer {
   readonly id: string;
 
   @Column()
+  name: string;
+
+  @Column()
   email: string;
 
   @Exclude()

@@ -22,6 +22,7 @@ export class CreateVolunteer1625575198568 implements MigrationInterface {
           {
             name: "phone_number",
             type: "integer",
+            isUnique: true,
           },
           {
             name: "password",

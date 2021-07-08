@@ -1,5 +1,7 @@
-import { classToPlain } from "class-transformer";
 import { getCustomRepository } from "typeorm";
+import { classToPlain } from "class-transformer";
+import { hash } from "bcryptjs";
+
 import { VolunteersRepository } from "../repositories/VolunteersRepository";
 
 interface IVolunteerRequest {
@@ -22,7 +24,7 @@ class CreateVolunteerService {
   }: IVolunteerRequest) {
     const volunteersRepository = getCustomRepository(VolunteersRepository);
 
-    const emailAlreadyExists = volunteersRepository.findOne({
+    const emailAlreadyExists = await volunteersRepository.findOne({
       email,
     });
 
@@ -30,7 +32,7 @@ class CreateVolunteerService {
       throw new Error("Email is already in use!");
     }
 
-    const phoneNumberAlreadyExists = volunteersRepository.findOne({
+    const phoneNumberAlreadyExists = await volunteersRepository.findOne({
       phone_number,
     });
 
@@ -38,11 +40,13 @@ class CreateVolunteerService {
       throw new Error("Phone number is already in use!");
     }
 
+    const passwordHash = await hash(password, 8);
+
     const volunteer = volunteersRepository.create({
       name,
       email,
       phone_number,
-      password,
+      password: passwordHash,
       admin,
       address_id,
     });

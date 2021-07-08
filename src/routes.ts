@@ -1,10 +1,22 @@
 import { Router } from "express";
-import { CreateAddressController } from "./controllers/CreateAddressController";
+
+import { ensureAuthenticated } from "./middlewares/ensureAuthenticated";
+import { ensureAdmin } from "./middlewares/ensureAdmin";
+
+import { CreateVolunteerAddressController } from "./controllers/CreateVolunteerController";
+import { AuthenticateVolunteerController } from "./controllers/AuthenticateVolunteerController";
 
 const router = Router();
 
-const createAddressController = new CreateAddressController();
+const createVolunteerAddressController = new CreateVolunteerAddressController();
+const authenticateVolunteer = new AuthenticateVolunteerController();
 
-router.post("/address", createAddressController.handle);
+router.post("/login", authenticateVolunteer.handle);
+router.post(
+  "/volunteer",
+  ensureAuthenticated,
+  ensureAdmin,
+  createVolunteerAddressController.handle
+);
 
 export { router };

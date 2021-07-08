@@ -22,6 +22,9 @@ class Volunteer {
   @Column()
   email: string;
 
+  @Column()
+  phone_number: number;
+
   @Exclude()
   @Column()
   password: string;

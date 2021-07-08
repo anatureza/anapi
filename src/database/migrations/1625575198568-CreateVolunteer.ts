@@ -20,6 +20,10 @@ export class CreateVolunteer1625575198568 implements MigrationInterface {
             type: "varchar",
           },
           {
+            name: "phone_number",
+            type: "integer",
+          },
+          {
             name: "password",
             type: "varchar",
           },

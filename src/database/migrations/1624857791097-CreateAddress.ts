@@ -18,7 +18,7 @@ export class CreateAddress1624857791097 implements MigrationInterface {
           },
           {
             name: "number",
-            type: "int",
+            type: "integer",
           },
           {
             name: "complement",
@@ -31,7 +31,7 @@ export class CreateAddress1624857791097 implements MigrationInterface {
           },
           {
             name: "zip",
-            type: "int",
+            type: "integer",
           },
           {
             name: "city",

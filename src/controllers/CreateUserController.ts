@@ -1,14 +1,24 @@
 import { Request, Response } from "express";
 import { CreateAddressService } from "../services/CreateAddressService";
-import { CreateVolunteerService } from "../services/CreateVolunteerService";
+import { CreateUserService } from "../services/CreateUserService";
 
-class CreateVolunteerAddressController {
+class CreateUserController {
   async handle(req: Request, res: Response) {
+    // Get Address info
     const { place, number, complement, neighborhood, zip, city } = req.body;
-    const { name, email, phone_number, password, admin } = req.body;
+    // Get User info
+    const {
+      name,
+      email,
+      password,
+      phone_number,
+      birth_date,
+      admin,
+      authorizes_image,
+    } = req.body;
 
     const createAddressService = new CreateAddressService();
-    const createVolunteerService = new CreateVolunteerService();
+    const createUserService = new CreateUserService();
 
     const address = await createAddressService.execute({
       place,
@@ -19,17 +29,19 @@ class CreateVolunteerAddressController {
       city,
     });
 
-    const volunteer = await createVolunteerService.execute({
+    const user = await createUserService.execute({
       name,
       email,
-      phone_number,
       password,
-      admin,
+      phone_number,
       address_id: address.id,
+      birth_date,
+      admin,
+      authorizes_image,
     });
 
-    return res.json({ volunteer, address });
+    return res.json({ user, address });
   }
 }
 
-export { CreateVolunteerAddressController };
+export { CreateUserController };

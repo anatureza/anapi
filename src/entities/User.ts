@@ -11,8 +11,8 @@ import { Exclude } from "class-transformer";
 import { v4 as uuid } from "uuid";
 import { Address } from "./Address";
 
-@Entity("volunteer")
-class Volunteer {
+@Entity("user")
+class User {
   @PrimaryColumn()
   readonly id: string;
 
@@ -22,21 +22,27 @@ class Volunteer {
   @Column()
   email: string;
 
-  @Column()
-  phone_number: number;
-
   @Exclude()
   @Column()
   password: string;
 
   @Column()
-  admin: boolean;
+  phone_number: number;
 
   @Column()
   address_id: string;
   @JoinColumn({ name: "address_id" })
   @OneToOne(() => Address)
   address: Address;
+
+  @Column()
+  birth_date: Date;
+
+  @Column()
+  admin: boolean;
+
+  @Column()
+  authorizes_image: boolean;
 
   @CreateDateColumn()
   created_at: Date;
@@ -51,4 +57,4 @@ class Volunteer {
   }
 }
 
-export { Volunteer };
+export { User };

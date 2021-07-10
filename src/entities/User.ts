@@ -11,7 +11,7 @@ import { Exclude } from "class-transformer";
 import { v4 as uuid } from "uuid";
 import { Address } from "./Address";
 
-@Entity("user")
+@Entity("users")
 class User {
   @PrimaryColumn()
   readonly id: string;

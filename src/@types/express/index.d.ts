@@ -1,5 +1,5 @@
 declare namespace Express {
   export interface Request {
-    volunteer_id: string;
+    user_id: string;
   }
 }

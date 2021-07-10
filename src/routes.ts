@@ -3,20 +3,15 @@ import { Router } from "express";
 import { ensureAuthenticated } from "./middlewares/ensureAuthenticated";
 import { ensureAdmin } from "./middlewares/ensureAdmin";
 
-import { CreateVolunteerAddressController } from "./controllers/CreateVolunteerController";
-import { AuthenticateVolunteerController } from "./controllers/AuthenticateVolunteerController";
+import { CreateUserController } from "./controllers/CreateUserController";
+import { AuthenticateUserController } from "./controllers/AuthenticateUserController";
 
 const router = Router();
 
-const createVolunteerAddressController = new CreateVolunteerAddressController();
-const authenticateVolunteer = new AuthenticateVolunteerController();
+const createUserController = new CreateUserController();
+const authenticateUser = new AuthenticateUserController();
 
-router.post("/login", authenticateVolunteer.handle);
-router.post(
-  "/volunteer",
-  ensureAuthenticated,
-  ensureAdmin,
-  createVolunteerAddressController.handle
-);
+router.post("/login", authenticateUser.handle);
+router.post("/user", createUserController.handle);
 
 export { router };

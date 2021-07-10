@@ -24,7 +24,7 @@ export function ensureAuthenticated(
   try {
     const { sub } = verify(token, process.env.HASH_CODE) as IPayload;
 
-    req.volunteer_id = sub;
+    req.user_id = sub;
 
     return next();
   } catch (err) {

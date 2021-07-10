@@ -3,28 +3,28 @@ import { getCustomRepository } from "typeorm";
 import { sign } from "jsonwebtoken";
 import { config } from "dotenv";
 
-import { VolunteersRepository } from "../repositories/VolunteersRepository";
+import { UsersRepository } from "../repositories/UsersRepository";
 
 config();
 
-interface IAuthenticateVolunteer {
+interface IAuthenticateUser {
   email: string;
   password: string;
 }
 
-class AuthenticateVolunteerService {
-  async execute({ email, password }: IAuthenticateVolunteer) {
-    const volunteersRepository = getCustomRepository(VolunteersRepository);
+class AuthenticateUserService {
+  async execute({ email, password }: IAuthenticateUser) {
+    const usersRepository = getCustomRepository(UsersRepository);
 
-    const volunteer = await volunteersRepository.findOne({
+    const user = await usersRepository.findOne({
       email,
     });
 
-    if (!volunteer) {
+    if (!user) {
       throw new Error("Email does not exists!");
     }
 
-    const passwordMatch = compare(password, volunteer.password);
+    const passwordMatch = compare(password, user.password);
 
     if (!passwordMatch) {
       throw new Error("Email/Password incorrect!");
@@ -32,11 +32,11 @@ class AuthenticateVolunteerService {
 
     const token = sign(
       {
-        email: volunteer.email,
+        email: user.email,
       },
       process.env.HASH_CODE,
       {
-        subject: volunteer.id,
+        subject: user.id,
         expiresIn: "1d",
       }
     );
@@ -45,4 +45,4 @@ class AuthenticateVolunteerService {
   }
 }
 
-export { AuthenticateVolunteerService };
+export { AuthenticateUserService };

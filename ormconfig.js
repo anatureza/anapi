@@ -9,6 +9,7 @@ module.exports = {
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
+  synchronize: true,
   migrations: ["src/database/migrations/*.ts"],
   entities: ["src/entities/*.ts"],
   cli: {

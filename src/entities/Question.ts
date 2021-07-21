@@ -17,7 +17,7 @@ class Question {
   order: number;
 
   @Column()
-  question: string;
+  question_title: string;
 
   @CreateDateColumn()
   created_at: Date;

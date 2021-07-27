@@ -1,7 +1,7 @@
 import { getCustomRepository } from "typeorm";
-import { AddressRepository } from "../repositories/AddressRepository";
-import { AnimalsRepository } from "../repositories/AnimalsRepository";
-import { UsersRepository } from "../repositories/UsersRepository";
+import { AddressRepository } from "../../repositories/AddressRepository";
+import { AnimalsRepository } from "../../repositories/AnimalsRepository";
+import { UsersRepository } from "../../repositories/UsersRepository";
 
 interface IAnimalRequest {
   creator_id: string;

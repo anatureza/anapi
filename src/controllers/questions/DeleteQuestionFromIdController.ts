@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { DeleteQuestionFromIdService } from "../../services/question/DeleteQuestionFromIdService";
+import { DeleteQuestionFromIdService } from "../../services/questions/DeleteQuestionFromIdService";
 
 class DeleteQuestionFromIdController {
   async handle(req: Request, res: Response) {

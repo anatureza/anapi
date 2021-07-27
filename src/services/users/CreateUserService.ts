@@ -2,7 +2,7 @@ import { getCustomRepository } from "typeorm";
 import { classToPlain } from "class-transformer";
 import { hash } from "bcryptjs";
 
-import { UsersRepository } from "../repositories/UsersRepository";
+import { UsersRepository } from "../../repositories/UsersRepository";
 
 interface IUserRequest {
   name: string;

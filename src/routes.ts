@@ -3,9 +3,12 @@ import { Router } from "express";
 import { ensureAuthenticated } from "./middlewares/ensureAuthenticated";
 import { ensureAdmin } from "./middlewares/ensureAdmin";
 
-import { CreateUserController } from "./controllers/CreateUserController";
-import { AuthenticateUserController } from "./controllers/AuthenticateUserController";
-import { CreateAnimalController } from "./controllers/CreateAnimalController";
+import { CreateUserController } from "./controllers/users/CreateUserController";
+
+import { AuthenticateUserController } from "./controllers/auth/AuthenticateUserController";
+
+import { CreateAnimalController } from "./controllers/animals/CreateAnimalController";
+
 import { CreateQuestionController } from "./controllers/questions/CreateQuestionController";
 import { ListQuestionsController } from "./controllers/questions/ListQuestionController";
 import { EditQuestionFromOrderController } from "./controllers/questions/EditQuestionFromOrderController";

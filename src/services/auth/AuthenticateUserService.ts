@@ -3,7 +3,7 @@ import { getCustomRepository } from "typeorm";
 import { sign } from "jsonwebtoken";
 import { config } from "dotenv";
 
-import { UsersRepository } from "../repositories/UsersRepository";
+import { UsersRepository } from "../../repositories/UsersRepository";
 
 config();
 

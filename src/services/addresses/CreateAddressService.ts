@@ -1,5 +1,5 @@
 import { getCustomRepository } from "typeorm";
-import { AddressRepository } from "../repositories/AddressRepository";
+import { AddressRepository } from "../../repositories/AddressRepository";
 
 interface IAddressRequest {
   place: string;

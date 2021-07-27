@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
-import { CreateAddressService } from "../services/CreateAddressService";
-import { CreateAnimalService } from "../services/CreateAnimalService";
+import { CreateAddressService } from "../../services/addresses/CreateAddressService";
+import { CreateAnimalService } from "../../services/animals/CreateAnimalService";
 
 class CreateAnimalController {
   async handle(req: Request, res: Response) {
@@ -9,7 +9,6 @@ class CreateAnimalController {
 
     const { name, description, kind, gender, birth_date } = req.body;
 
-    // Get user_id from authenticated user
     const user_id = req.user_id;
 
     const createAddressService = new CreateAddressService();

@@ -1,5 +1,5 @@
 import { getCustomRepository } from "typeorm";
-import { AddressRepository } from "../../repositories/AddressRepository";
+import { AddressesRepository } from "../../repositories/AddressesRepository";
 import { AnimalsRepository } from "../../repositories/AnimalsRepository";
 import { UsersRepository } from "../../repositories/UsersRepository";
 
@@ -25,7 +25,7 @@ class CreateAnimalService {
   }: IAnimalRequest) {
     const animalsRepository = getCustomRepository(AnimalsRepository);
     const usersRepository = getCustomRepository(UsersRepository);
-    const addressRepository = getCustomRepository(AddressRepository);
+    const addressesRepository = getCustomRepository(AddressesRepository);
 
     // Kind can only be CAT (c) or DOG (d) - at least for now
     const kindOptions: Array<String> = ["c", "d"];
@@ -43,7 +43,7 @@ class CreateAnimalService {
       throw new Error("User does not exist!");
     }
 
-    const addressExists = addressRepository.findOne({
+    const addressExists = addressesRepository.findOne({
       id: address_id,
     });
 

@@ -1,5 +1,5 @@
 import { getCustomRepository } from "typeorm";
-import { AddressRepository } from "../../repositories/AddressRepository";
+import { AddressesRepository } from "../../repositories/AddressesRepository";
 
 interface IAddressRequest {
   place: string;
@@ -19,9 +19,9 @@ class CreateAddressService {
     zip,
     city,
   }: IAddressRequest) {
-    const addressRepository = getCustomRepository(AddressRepository);
+    const addressesRepository = getCustomRepository(AddressesRepository);
 
-    const address = addressRepository.create({
+    const address = addressesRepository.create({
       place,
       number,
       complement,
@@ -30,7 +30,7 @@ class CreateAddressService {
       city,
     });
 
-    await addressRepository.save(address);
+    await addressesRepository.save(address);
 
     return address;
   }

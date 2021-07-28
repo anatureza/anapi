@@ -13,10 +13,10 @@ import { Reservation } from "./Reservation";
 
 @Entity("answers")
 class Answer {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: "uuid" })
   readonly id: string;
 
-  @Column()
+  @Column({ type: "uuid" })
   reservation_id: string;
   @JoinColumn({ name: "reservation_id" })
   @ManyToOne(() => Reservation)

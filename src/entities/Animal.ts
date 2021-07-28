@@ -14,16 +14,16 @@ import { User } from "./User";
 
 @Entity("animals")
 class Animal {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: "uuid" })
   readonly id: string;
 
-  @Column()
+  @Column({ type: "uuid" })
   creator_id: string;
   @JoinColumn({ name: "creator_id" })
   @ManyToOne(() => User)
   user: User;
 
-  @Column()
+  @Column({ type: "uuid" })
   address_id: string;
   @JoinColumn({ name: "address_id" })
   @OneToOne(() => Address)

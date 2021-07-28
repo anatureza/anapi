@@ -13,22 +13,22 @@ import { User } from "./User";
 
 @Entity("reservations")
 class Reservation {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: "uuid" })
   readonly id: string;
 
-  @Column()
+  @Column({ type: "uuid" })
   adopter_id: string;
   @JoinColumn({ name: "adopter_id" })
   @ManyToOne(() => User)
   userAdopter: User;
 
-  @Column()
+  @Column({ type: "uuid" })
   volunteer_id: string;
   @JoinColumn({ name: "volunteer_id" })
   @ManyToOne(() => User)
   userVolunteer: User;
 
-  @Column()
+  @Column({ type: "uuid" })
   animal_id: string;
   @JoinColumn({ name: "animal_id" })
   @ManyToOne(() => Animal)

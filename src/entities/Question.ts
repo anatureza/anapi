@@ -10,7 +10,7 @@ import { v4 as uuid } from "uuid";
 
 @Entity("questions")
 class Question {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: "uuid" })
   readonly id: string;
 
   @Column()

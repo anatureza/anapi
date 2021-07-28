@@ -13,7 +13,7 @@ import { Address } from "./Address";
 
 @Entity("users")
 class User {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: "uuid" })
   readonly id: string;
 
   @Column()
@@ -29,7 +29,7 @@ class User {
   @Column()
   phone_number: number;
 
-  @Column()
+  @Column({ type: "uuid" })
   address_id: string;
   @JoinColumn({ name: "address_id" })
   @OneToOne(() => Address)

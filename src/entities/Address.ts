@@ -8,9 +8,9 @@ import {
 
 import { v4 as uuid } from "uuid";
 
-@Entity("address")
+@Entity("addresses")
 class Address {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: "uuid" })
   readonly id: string;
 
   @Column()

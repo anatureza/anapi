@@ -61,7 +61,7 @@ export class CreateUsers1625948049976 implements MigrationInterface {
         foreignKeys: [
           {
             name: "FKAddressId",
-            referencedTableName: "address",
+            referencedTableName: "addresses",
             referencedColumnNames: ["id"],
             columnNames: ["address_id"],
             onDelete: "SET NULL",

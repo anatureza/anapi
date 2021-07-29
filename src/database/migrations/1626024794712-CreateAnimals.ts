@@ -65,7 +65,7 @@ export class CreateAnimals1626024794712 implements MigrationInterface {
           },
           {
             name: "FKAddressId",
-            referencedTableName: "address",
+            referencedTableName: "addresses",
             referencedColumnNames: ["id"],
             columnNames: ["address_id"],
             onDelete: "SET NULL",

@@ -34,7 +34,7 @@ class AuthenticateUserService {
       {
         email: user.email,
       },
-      process.env.HASH_CODE,
+      process.env.JWT_SECRET,
       {
         subject: user.id,
         expiresIn: "1d",

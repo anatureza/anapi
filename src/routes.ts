@@ -4,6 +4,10 @@ import { ensureAuthenticated } from "./middlewares/ensureAuthenticated";
 import { ensureAdmin } from "./middlewares/ensureAdmin";
 
 import { CreateUserController } from "./controllers/users/CreateUserController";
+import { ShowAuthenticatedUserController } from "./controllers/users/ShowUserByIdController";
+import { EditUserController } from "./controllers/users/EditUserController";
+import { DeleteUserController } from "./controllers/users/DeleteUserController";
+import { ListAllUsersController } from "./controllers/users/ListAllUsersController";
 
 import { AuthenticateUserController } from "./controllers/auth/AuthenticateUserController";
 
@@ -16,8 +20,12 @@ import { DeleteQuestionFromIdController } from "./controllers/questions/DeleteQu
 
 const router = Router();
 
-const createUserController = new CreateUserController();
 const authenticateUser = new AuthenticateUserController();
+const createUserController = new CreateUserController();
+const showAuthenticatedUserController = new ShowAuthenticatedUserController();
+const editUserController = new EditUserController();
+const deleteUserController = new DeleteUserController();
+const listAllUsersController = new ListAllUsersController();
 
 const createAnimalController = new CreateAnimalController();
 
@@ -28,9 +36,22 @@ const deleteQuestionFromIdController = new DeleteQuestionFromIdController();
 
 router.post("/login", authenticateUser.handle);
 router.post("/user", createUserController.handle);
+router.get(
+  "/user",
+  ensureAuthenticated,
+  showAuthenticatedUserController.handle
+);
+router.put("/user", ensureAuthenticated, editUserController.handle);
+router.delete("/user/:id", ensureAuthenticated, deleteUserController.handle);
+router.get(
+  "/users",
+  ensureAuthenticated,
+  ensureAdmin,
+  listAllUsersController.handle
+);
 
 router.post(
-  "/animal/new",
+  "/animal",
   ensureAuthenticated,
   ensureAdmin,
   createAnimalController.handle
@@ -43,7 +64,7 @@ router.post(
   createQuestionController.handle
 );
 router.get("/questions", listQuestionsController.handle);
-router.patch(
+router.put(
   "/question",
   ensureAuthenticated,
   ensureAdmin,

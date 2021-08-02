@@ -17,6 +17,7 @@ import { CreateQuestionController } from "./controllers/questions/CreateQuestion
 import { ListQuestionsController } from "./controllers/questions/ListQuestionController";
 import { EditQuestionFromOrderController } from "./controllers/questions/EditQuestionFromOrderController";
 import { DeleteQuestionFromIdController } from "./controllers/questions/DeleteQuestionFromIdController";
+import { DeleteSpecificUserController } from "./controllers/users/DeleteSpecificUserController";
 
 const router = Router();
 
@@ -25,6 +26,7 @@ const createUserController = new CreateUserController();
 const showAuthenticatedUserController = new ShowAuthenticatedUserController();
 const editUserController = new EditUserController();
 const deleteUserController = new DeleteUserController();
+const deleteSpecificUserController = new DeleteSpecificUserController();
 const listAllUsersController = new ListAllUsersController();
 
 const createAnimalController = new CreateAnimalController();
@@ -42,7 +44,13 @@ router.get(
   showAuthenticatedUserController.handle
 );
 router.put("/user", ensureAuthenticated, editUserController.handle);
-router.delete("/user/:id", ensureAuthenticated, deleteUserController.handle);
+router.delete("/user", ensureAuthenticated, deleteUserController.handle);
+router.delete(
+  "/user/:id",
+  ensureAuthenticated,
+  ensureAdmin,
+  deleteSpecificUserController.handle
+);
 router.get(
   "/users",
   ensureAuthenticated,

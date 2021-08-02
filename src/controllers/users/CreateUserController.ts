@@ -32,8 +32,8 @@ class CreateUserController {
       city,
     });
 
-    const user = await createUserService
-      .execute({
+    try {
+      const user = await createUserService.execute({
         name,
         email,
         password,
@@ -42,14 +42,15 @@ class CreateUserController {
         birth_date,
         admin,
         authorizes_image,
-      })
-      .catch(async (err) => {
-        await deleteAddressService.execute({ id: address.id });
-        console.log(err);
-        return res.json({ message: "User couldn't be created" });
       });
 
-    return res.json({ user, address });
+      return res.json({ user, address });
+    } catch (err) {
+      console.log(err);
+      await deleteAddressService.execute({ id: address.id });
+
+      return res.json({ message: "User couldn't be created" });
+    }
   }
 }
 

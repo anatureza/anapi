@@ -4,7 +4,7 @@ import { UsersRepository } from "../../repositories/UsersRepository";
 
 interface IUserRequest {
   user_id: string;
-  user_id_params: string;
+  user_id_params?: string;
 }
 
 class DeleteUserService {
@@ -12,30 +12,38 @@ class DeleteUserService {
     const usersRepository = getCustomRepository(UsersRepository);
     const addressesRepository = getCustomRepository(AddressesRepository);
 
-    if (user_id !== user_id_params) {
-      throw new Error("You can only delete your account");
+    const userLoggedIn = await usersRepository.findOne({ id: user_id });
+
+    const deletedUserId = !user_id_params ? user_id : user_id_params;
+
+    if (user_id_params) {
+      const toBeDeleted = await usersRepository.findOne({
+        id: user_id_params,
+      });
+
+      if (!toBeDeleted) {
+        throw new Error("User Not Found");
+      }
+
+      if (toBeDeleted.admin && toBeDeleted.id !== userLoggedIn.id) {
+        return { message: "You Can't Delete an Admin!" };
+      }
     }
 
-    const user = await usersRepository.findOne({ id: user_id });
+    const deletedUser = await usersRepository.findOne({ id: deletedUserId });
 
-    if (!user) {
-      throw new Error("User does not exist");
-    }
-
-    const address = await addressesRepository.findOne({ id: user.address_id });
-
-    if (!address) {
-      throw new Error("Address Id does not exist!");
+    if (!deletedUser) {
+      throw new Error("User Does Not exist");
     }
 
     try {
-      await usersRepository.delete({ id: user_id });
+      await usersRepository.delete({ id: deletedUser.id });
       await addressesRepository.delete({
-        id: user.address_id,
+        id: deletedUser.address_id,
       });
-      return { message: `User ${user.name} deleted` };
-    } catch (err) {
-      return { message: "An error occurred" };
+      return { message: `User ${deletedUser.name} deleted` };
+    } catch {
+      return { message: "An Error Occurred" };
     }
   }
 }

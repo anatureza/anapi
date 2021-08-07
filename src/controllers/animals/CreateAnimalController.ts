@@ -24,7 +24,7 @@ class CreateAnimalController {
     });
 
     const animal = await createAnimalService.execute({
-      creator_id: user_id,
+      volunteer_id: user_id,
       address_id: address.id,
       name,
       description,

@@ -2,9 +2,9 @@ import { getCustomRepository } from "typeorm";
 import { AddressesRepository } from "../../repositories/AddressesRepository";
 import { AnimalsRepository } from "../../repositories/AnimalsRepository";
 import { UsersRepository } from "../../repositories/UsersRepository";
-
+import { genderOptions, kindOptions } from "./AnimalOptions";
 interface IAnimalRequest {
-  creator_id: string;
+  volunteer_id: string;
   address_id: string;
   name: string;
   description: string;
@@ -15,7 +15,7 @@ interface IAnimalRequest {
 
 class CreateAnimalService {
   async execute({
-    creator_id,
+    volunteer_id,
     address_id,
     name,
     description,
@@ -27,16 +27,11 @@ class CreateAnimalService {
     const usersRepository = getCustomRepository(UsersRepository);
     const addressesRepository = getCustomRepository(AddressesRepository);
 
-    // Kind can only be CAT (c) or DOG (d) - at least for now
-    const kindOptions: Array<String> = ["c", "d"];
     kind = kind.trim().toLowerCase().charAt(0);
-
-    // Gender can only be MALE (m) or FEMALE (f)
-    const genderOptions: Array<String> = ["m", "f"];
     gender = gender.trim().toLowerCase().charAt(0);
 
     const creatorExists = usersRepository.findOne({
-      id: creator_id,
+      id: volunteer_id,
     });
 
     if (!creatorExists) {
@@ -52,11 +47,11 @@ class CreateAnimalService {
     }
 
     if (kind !== kindOptions[0] && kind !== kindOptions[1]) {
-      throw new Error("Kind can only be cat or dog");
+      throw new Error("Kind only be CAT ('c') or DOG ('d')");
     }
 
     if (gender !== genderOptions[0] && gender !== genderOptions[1]) {
-      throw new Error("Gender can only be MALE ('m') or FEMALE ('f') ");
+      throw new Error("Gender can only be MALE ('m') or FEMALE ('f')");
     }
 
     if (birth_date.valueOf() < Date.now().valueOf()) {
@@ -64,7 +59,7 @@ class CreateAnimalService {
     }
 
     const animal = animalsRepository.create({
-      creator_id,
+      volunteer_id,
       address_id,
       name,
       description,

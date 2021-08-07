@@ -12,6 +12,9 @@ import { ListAllUsersController } from "./controllers/users/ListAllUsersControll
 import { AuthenticateUserController } from "./controllers/auth/AuthenticateUserController";
 
 import { CreateAnimalController } from "./controllers/animals/CreateAnimalController";
+import { ListAnimalsController } from "./controllers/animals/ListAnimalsController";
+import { EditAnimalController } from "./controllers/animals/EditAnimalController";
+import { DeleteAnimalController } from "./controllers/animals/DeleteAnimalController";
 
 import { CreateQuestionController } from "./controllers/questions/CreateQuestionController";
 import { ListQuestionsController } from "./controllers/questions/ListQuestionController";
@@ -30,6 +33,9 @@ const deleteSpecificUserController = new DeleteSpecificUserController();
 const listAllUsersController = new ListAllUsersController();
 
 const createAnimalController = new CreateAnimalController();
+const listAnimalController = new ListAnimalsController();
+const editAnimalController = new EditAnimalController();
+const deleteAnimalController = new DeleteAnimalController();
 
 const createQuestionController = new CreateQuestionController();
 const listQuestionsController = new ListQuestionsController();
@@ -63,6 +69,24 @@ router.post(
   ensureAuthenticated,
   ensureAdmin,
   createAnimalController.handle
+);
+router.get(
+  "/animals",
+  ensureAuthenticated,
+  ensureAdmin,
+  listAnimalController.handle
+);
+router.put(
+  "/animal/:id",
+  ensureAuthenticated,
+  ensureAdmin,
+  editAnimalController.handle
+);
+router.delete(
+  "/animal/:id",
+  ensureAuthenticated,
+  ensureAdmin,
+  deleteAnimalController.handle
 );
 
 router.post(

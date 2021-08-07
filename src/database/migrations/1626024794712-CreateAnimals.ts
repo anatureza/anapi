@@ -12,7 +12,7 @@ export class CreateAnimals1626024794712 implements MigrationInterface {
             isPrimary: true,
           },
           {
-            name: "creator_id",
+            name: "volunteer_id",
             type: "uuid",
           },
           {

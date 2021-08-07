@@ -18,8 +18,8 @@ class Animal {
   readonly id: string;
 
   @Column({ type: "uuid" })
-  creator_id: string;
-  @JoinColumn({ name: "creator_id" })
+  volunteer_id: string;
+  @JoinColumn({ name: "volunteer_id" })
   @ManyToOne(() => User)
   user: User;
 

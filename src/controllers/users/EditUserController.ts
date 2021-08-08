@@ -1,28 +1,33 @@
 import { Request, Response } from "express";
-import { EditUserAddressService } from "../../services/users/EditUserAddressService";
+import { EditUserService } from "../../services/users/EditUserService";
 
 class EditUserController {
   async handle(req: Request, res: Response) {
     const { user_id } = req;
 
-    const { name, birth_date, authorizes_image } = req.body;
+    const { name, phone_number, birth_date, authorizes_image } = req.body;
 
     const { place, number, complement, neighborhood, zip, city } = req.body;
 
-    const editUserAddressService = new EditUserAddressService();
+    const editUserService = new EditUserService();
 
-    const updatedUser = await editUserAddressService.execute({
-      user_id,
-      name,
-      birth_date,
-      authorizes_image,
-      place,
-      number,
-      complement,
-      neighborhood,
-      zip,
-      city,
-    });
+    const updatedUser = await editUserService.execute(
+      {
+        user_id,
+        name,
+        phone_number,
+        birth_date,
+        authorizes_image,
+      },
+      {
+        place,
+        number,
+        complement,
+        neighborhood,
+        zip,
+        city,
+      }
+    );
 
     return res.json(updatedUser);
   }

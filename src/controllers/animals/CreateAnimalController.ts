@@ -9,7 +9,7 @@ class CreateAnimalController {
 
     const { name, description, kind, gender, birth_date } = req.body;
 
-    const user_id = req.user_id;
+    const { user_id } = req;
 
     const createAddressService = new CreateAddressService();
     const createAnimalService = new CreateAnimalService();

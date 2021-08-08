@@ -1,4 +1,5 @@
 import { getCustomRepository } from "typeorm";
+import { UserType } from "../../entities/User";
 import { AddressesRepository } from "../../repositories/AddressesRepository";
 import { UsersRepository } from "../../repositories/UsersRepository";
 
@@ -14,36 +15,28 @@ class DeleteUserService {
 
     const userLoggedIn = await usersRepository.findOne({ id: user_id });
 
-    const deletedUserId = !user_id_params ? user_id : user_id_params;
-
     if (user_id_params) {
-      const toBeDeleted = await usersRepository.findOne({
+      const userFromParams = await usersRepository.findOne({
         id: user_id_params,
       });
 
-      if (!toBeDeleted) {
-        throw new Error("User Not Found");
+      if (!userFromParams) {
+        throw new Error("Specified User Does Not exist");
       }
 
-      if (toBeDeleted.admin && toBeDeleted.id !== userLoggedIn.id) {
-        return { message: "You Can't Delete an Admin!" };
+      if (userFromParams.type === UserType.ADMIN) {
+        throw new Error("User Cannot Be Deleted");
       }
-    }
-
-    const deletedUser = await usersRepository.findOne({ id: deletedUserId });
-
-    if (!deletedUser) {
-      throw new Error("User Does Not exist");
     }
 
     try {
-      await usersRepository.delete({ id: deletedUser.id });
+      await usersRepository.delete({ id: userLoggedIn.id });
       await addressesRepository.delete({
-        id: deletedUser.address_id,
+        id: userLoggedIn.address_id,
       });
-      return { message: `User ${deletedUser.name} deleted` };
+      return { message: `User ${userLoggedIn.name} deleted` };
     } catch {
-      return { message: "An Error Occurred" };
+      throw new Error("User Could Not Be Deleted");
     }
   }
 }

@@ -25,8 +25,9 @@ export class CreateUsers1625948049976 implements MigrationInterface {
           },
           {
             name: "phone_number",
-            type: "integer",
+            type: "varchar",
             isUnique: true,
+            length: "11",
           },
           {
             name: "address_id",
@@ -38,9 +39,8 @@ export class CreateUsers1625948049976 implements MigrationInterface {
             type: "date",
           },
           {
-            name: "admin",
-            type: "boolean",
-            default: false,
+            name: "type",
+            type: "enum",
           },
           {
             name: "authorizes_image",
@@ -74,6 +74,5 @@ export class CreateUsers1625948049976 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable("users");
-    await queryRunner.dropForeignKey("users", "FKAddressId");
   }
 }

@@ -30,17 +30,13 @@ class CreateAnimalService {
     kind = kind.trim().toLowerCase().charAt(0);
     gender = gender.trim().toLowerCase().charAt(0);
 
-    const creatorExists = usersRepository.findOne({
-      id: volunteer_id,
-    });
+    const volunteer = await usersRepository.findOne(volunteer_id);
 
-    if (!creatorExists) {
+    if (!volunteer) {
       throw new Error("User does not exist!");
     }
 
-    const addressExists = addressesRepository.findOne({
-      id: address_id,
-    });
+    const addressExists = await addressesRepository.findOne(address_id);
 
     if (!addressExists) {
       throw new Error("Address Id does not exist!");

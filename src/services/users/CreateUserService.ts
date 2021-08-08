@@ -3,30 +3,43 @@ import { classToPlain } from "class-transformer";
 import { hash } from "bcryptjs";
 
 import { UsersRepository } from "../../repositories/UsersRepository";
+import { AddressesRepository } from "../../repositories/AddressesRepository";
+import { UserType } from "../../entities/User";
 
 interface IUserRequest {
   name: string;
   email: string;
   password: string;
-  phone_number: number;
-  address_id: string;
+  phone_number: string;
   birth_date: Date;
-  admin?: boolean;
+  type?: UserType;
   authorizes_image?: boolean;
 }
 
+interface IUserAddressRequest {
+  place: string;
+  number: number;
+  complement: string;
+  neighborhood: string;
+  zip: number;
+  city: string;
+}
+
 class CreateUserService {
-  async execute({
-    name,
-    email,
-    password,
-    phone_number,
-    address_id,
-    birth_date,
-    admin = false,
-    authorizes_image = false,
-  }: IUserRequest) {
+  async execute(
+    {
+      name,
+      email,
+      password,
+      phone_number,
+      birth_date,
+      type = UserType.USER,
+      authorizes_image = false,
+    }: IUserRequest,
+    { place, number, complement, neighborhood, zip, city }: IUserAddressRequest
+  ) {
     const usersRepository = getCustomRepository(UsersRepository);
+    const addressRepository = getCustomRepository(AddressesRepository);
 
     const emailAlreadyExists = await usersRepository.findOne({
       email,
@@ -46,20 +59,34 @@ class CreateUserService {
 
     const passwordHash = await hash(password, 8);
 
-    const user = usersRepository.create({
-      name,
-      email,
-      password: passwordHash,
-      phone_number,
-      address_id,
-      birth_date,
-      admin,
-      authorizes_image,
+    const userAddress = addressRepository.create({
+      place,
+      number,
+      complement,
+      neighborhood,
+      zip,
+      city,
     });
+    await addressRepository.save(userAddress);
 
-    await usersRepository.save(user);
+    try {
+      const user = usersRepository.create({
+        name,
+        email,
+        address_id: userAddress.id,
+        password: passwordHash,
+        phone_number,
+        birth_date,
+        type,
+        authorizes_image,
+      });
 
-    return classToPlain(user);
+      await usersRepository.save(user);
+      return classToPlain([user, userAddress]);
+    } catch (error) {
+      await addressRepository.delete({ id: userAddress.id });
+      throw new Error(`User Could Not Be Created why?(${error})`);
+    }
   }
 }
 

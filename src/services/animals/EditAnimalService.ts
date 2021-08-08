@@ -2,8 +2,10 @@ import { getCustomRepository } from "typeorm";
 
 import { AnimalsRepository } from "../../repositories/AnimalsRepository";
 import { AddressesRepository } from "../../repositories/AddressesRepository";
+import { UsersRepository } from "../../repositories/UsersRepository";
 
 import { genderOptions, kindOptions } from "./AnimalOptions";
+import { UserType } from "../../entities/User";
 
 interface IAnimalRequest {
   id: string;
@@ -46,6 +48,7 @@ class EditAnimalService {
   ) {
     const animalsRepository = getCustomRepository(AnimalsRepository);
     const addressesRepository = getCustomRepository(AddressesRepository);
+    const usersRepository = getCustomRepository(UsersRepository);
 
     const animal = await animalsRepository.findOne({ id });
 
@@ -53,8 +56,12 @@ class EditAnimalService {
       throw new Error("Animal Does Not Exist!");
     }
 
-    if (animal.volunteer_id !== volunteer_id) {
-      throw new Error("You Can't Edit this Animal");
+    const user = await usersRepository.findOne(volunteer_id);
+
+    if (user.type !== UserType.ADMIN) {
+      if (animal.volunteer_id !== volunteer_id) {
+        throw new Error("You Can't Edit this Animal");
+      }
     }
 
     if (typeof kind !== "undefined") {

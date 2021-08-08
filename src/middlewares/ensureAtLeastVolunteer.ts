@@ -3,7 +3,7 @@ import { getCustomRepository } from "typeorm";
 import { UserType } from "../entities/User";
 import { UsersRepository } from "../repositories/UsersRepository";
 
-export async function ensureAdmin(
+export async function ensureAtLeastVolunteer(
   req: Request,
   res: Response,
   next: NextFunction
@@ -14,7 +14,7 @@ export async function ensureAdmin(
 
   const { type } = await usersRepository.findOne(user_id);
 
-  if (type === UserType.ADMIN) {
+  if (type === UserType.VOLUNTEER || type === UserType.ADMIN) {
     return next();
   }
 

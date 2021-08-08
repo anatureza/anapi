@@ -56,10 +56,10 @@ export class CreateAnimals1626024794712 implements MigrationInterface {
         ],
         foreignKeys: [
           {
-            name: "FKCreatorId",
+            name: "FKVolunteerId",
             referencedTableName: "users",
             referencedColumnNames: ["id"],
-            columnNames: ["creator_id"],
+            columnNames: ["volunteer_id"],
             onDelete: "SET NULL",
             onUpdate: "SET NULL",
           },

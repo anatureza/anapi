@@ -11,6 +11,12 @@ import { Exclude } from "class-transformer";
 import { v4 as uuid } from "uuid";
 import { Address } from "./Address";
 
+export enum UserType {
+  ADMIN = "admin",
+  VOLUNTEER = "volunteer",
+  USER = "user",
+}
+
 @Entity("users")
 class User {
   @PrimaryColumn({ type: "uuid" })
@@ -26,8 +32,8 @@ class User {
   @Column()
   password: string;
 
-  @Column()
-  phone_number: number;
+  @Column({ length: "11" })
+  phone_number: string;
 
   @Column({ type: "uuid" })
   address_id: string;
@@ -38,8 +44,8 @@ class User {
   @Column()
   birth_date: Date;
 
-  @Column()
-  admin: boolean;
+  @Column({ type: "enum", enum: UserType, default: UserType.USER })
+  type: UserType;
 
   @Column()
   authorizes_image: boolean;

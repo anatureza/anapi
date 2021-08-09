@@ -81,31 +81,35 @@ class EditAnimalService {
         : AnimalGender.NONE;
 
     try {
-      const address = await addressesRepository.findOneOrFail({
-        id: animal.address_id,
-      });
+      await animalsRepository.update(
+        { id: animal.id },
+        {
+          name,
+          description,
+          kind: enumKind,
+          gender: enumGender,
+          birth_date,
+        }
+      );
+      await addressesRepository.update(
+        { id: animal.address_id },
+        {
+          place,
+          number,
+          complement,
+          neighborhood,
+          zip,
+          city,
+        }
+      );
 
-      const updatedAnimalData = Object.assign(animal, {
-        name,
-        description,
-        kind: enumKind,
-        gender: enumGender,
-        birth_date,
-      });
-
-      const updatedAddressData = Object.assign(address, {
-        place,
-        number,
-        complement,
-        neighborhood,
-        zip,
-        city,
-      });
-
-      const updatedAnimal = await animalsRepository.save(updatedAnimalData);
-      const updatedAddress = await addressesRepository.save(updatedAddressData);
-
-      return { updatedAnimal, updatedAddress };
+      const updatedAnimal = await animalsRepository.findOne(
+        { id: animal.id },
+        {
+          relations: ["address"],
+        }
+      );
+      return updatedAnimal;
     } catch (error) {
       throw new Error(`Animal Could Not be Edited (${error})`);
     }

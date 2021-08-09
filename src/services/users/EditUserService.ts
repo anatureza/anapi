@@ -36,30 +36,35 @@ class EditUserService {
     }
 
     try {
-      const address = await usersRepository.findOneOrFail({
-        id: user.address_id,
+      await usersRepository.update(
+        {
+          id: user.id,
+        },
+        {
+          name,
+          phone_number,
+          birth_date,
+          authorizes_image,
+        }
+      );
+      await addressesRepository.update(
+        {
+          id: user.address_id,
+        },
+        {
+          place,
+          number,
+          complement,
+          neighborhood,
+          zip,
+          city,
+        }
+      );
+
+      const updatedUser = await usersRepository.findOne(user_id, {
+        relations: ["address"],
       });
-
-      const updatedUserData = Object.assign(user, {
-        name,
-        phone_number,
-        birth_date,
-        authorizes_image,
-      });
-
-      const updatedAddressData = Object.assign(address, {
-        place,
-        number,
-        complement,
-        neighborhood,
-        zip,
-        city,
-      });
-
-      const updatedUser = await usersRepository.save(updatedUserData);
-      const updatesAddress = await addressesRepository.save(updatedAddressData);
-
-      return classToPlain([updatedUser, updatesAddress]);
+      return classToPlain(updatedUser);
     } catch (error) {
       throw new Error(`User Could Not Be Edited (${error})`);
     }

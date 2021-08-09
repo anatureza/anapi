@@ -15,6 +15,8 @@ class DeleteUserService {
 
     const userLoggedIn = await usersRepository.findOne({ id: user_id });
 
+    const userIdToBeDeleted = !user_id_params ? user_id : user_id_params;
+
     if (user_id_params) {
       const userFromParams = await usersRepository.findOne({
         id: user_id_params,
@@ -24,17 +26,23 @@ class DeleteUserService {
         throw new Error("Specified User Does Not exist");
       }
 
+      if (userLoggedIn.type !== UserType.ADMIN) {
+        throw new Error("Unauthorized");
+      }
+
       if (userFromParams.type === UserType.ADMIN) {
         throw new Error("User Cannot Be Deleted");
       }
     }
 
+    const userToBeDeleted = await usersRepository.findOne(userIdToBeDeleted);
+
     try {
-      await usersRepository.delete({ id: userLoggedIn.id });
+      await usersRepository.delete(userToBeDeleted.id);
       await addressesRepository.delete({
-        id: userLoggedIn.address_id,
+        id: userToBeDeleted.address_id,
       });
-      return { message: `User ${userLoggedIn.name} deleted` };
+      return { message: `User ${userToBeDeleted.name} deleted` };
     } catch {
       throw new Error("User Could Not Be Deleted");
     }

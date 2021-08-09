@@ -1,15 +1,15 @@
 import { getCustomRepository } from "typeorm";
+import { AnimalGender, AnimalKind } from "../../entities/Animal";
 import { AddressesRepository } from "../../repositories/AddressesRepository";
 import { AnimalsRepository } from "../../repositories/AnimalsRepository";
 import { UsersRepository } from "../../repositories/UsersRepository";
-import { genderOptions, kindOptions } from "./AnimalOptions";
 interface IAnimalRequest {
   volunteer_id: string;
   address_id: string;
   name: string;
   description: string;
-  kind: string;
-  gender: string;
+  kind?: string;
+  gender?: string;
   birth_date: Date;
 }
 
@@ -19,16 +19,13 @@ class CreateAnimalService {
     address_id,
     name,
     description,
-    kind,
-    gender,
+    kind = "none",
+    gender = "none",
     birth_date,
   }: IAnimalRequest) {
     const animalsRepository = getCustomRepository(AnimalsRepository);
     const usersRepository = getCustomRepository(UsersRepository);
     const addressesRepository = getCustomRepository(AddressesRepository);
-
-    kind = kind.trim().toLowerCase().charAt(0);
-    gender = gender.trim().toLowerCase().charAt(0);
 
     const volunteer = await usersRepository.findOne(volunteer_id);
 
@@ -42,13 +39,21 @@ class CreateAnimalService {
       throw new Error("Address Id does not exist!");
     }
 
-    if (kind !== kindOptions[0] && kind !== kindOptions[1]) {
-      throw new Error("Kind only be CAT ('c') or DOG ('d')");
-    }
+    kind = kind.trim().toLowerCase();
+    const enumKind =
+      kind === "dog"
+        ? AnimalKind.DOG
+        : kind === "cat"
+        ? AnimalKind.CAT
+        : AnimalKind.NONE;
 
-    if (gender !== genderOptions[0] && gender !== genderOptions[1]) {
-      throw new Error("Gender can only be MALE ('m') or FEMALE ('f')");
-    }
+    gender = gender.trim().toLowerCase();
+    const enumGender =
+      gender === "female"
+        ? AnimalGender.FEMALE
+        : gender === "male"
+        ? AnimalGender.MALE
+        : AnimalGender.NONE;
 
     if (birth_date.valueOf() < Date.now().valueOf()) {
       throw new Error("Animal must be born first");
@@ -59,8 +64,8 @@ class CreateAnimalService {
       address_id,
       name,
       description,
-      kind,
-      gender,
+      kind: enumKind,
+      gender: enumGender,
       birth_date,
       available: true,
     });

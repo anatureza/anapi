@@ -33,11 +33,11 @@ export class CreateAnimals1626024794712 implements MigrationInterface {
           },
           {
             name: "kind",
-            type: "char",
+            type: "enum",
           },
           {
             name: "gender",
-            type: "char",
+            type: "enum",
           },
           {
             name: "birth_date",

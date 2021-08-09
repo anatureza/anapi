@@ -12,6 +12,18 @@ import { v4 as uuid } from "uuid";
 import { Address } from "./Address";
 import { User } from "./User";
 
+export enum AnimalKind {
+  CAT = "cat",
+  DOG = "dog",
+  NONE = "none",
+}
+
+export enum AnimalGender {
+  MALE = "male",
+  FEMALE = "female",
+  NONE = "none",
+}
+
 @Entity("animals")
 class Animal {
   @PrimaryColumn({ type: "uuid" })
@@ -38,11 +50,11 @@ class Animal {
   @Column()
   available: boolean;
 
-  @Column()
-  kind: string;
+  @Column({ type: "enum", enum: AnimalKind, default: AnimalKind.NONE })
+  kind: AnimalKind;
 
-  @Column()
-  gender: string;
+  @Column({ type: "enum", enum: AnimalGender, default: AnimalGender.NONE })
+  gender: AnimalGender;
 
   @Column()
   birth_date: Date;

@@ -4,16 +4,16 @@ import { AnimalsRepository } from "../../repositories/AnimalsRepository";
 import { AddressesRepository } from "../../repositories/AddressesRepository";
 import { UsersRepository } from "../../repositories/UsersRepository";
 
-import { genderOptions, kindOptions } from "./AnimalOptions";
 import { UserType } from "../../entities/User";
+import { AnimalGender, AnimalKind } from "../../entities/Animal";
 
 interface IAnimalRequest {
   id: string;
   volunteer_id: string;
   name: string;
   description: string;
-  kind: string;
-  gender: string;
+  kind?: string;
+  gender?: string;
   birth_date: Date;
 }
 
@@ -33,8 +33,8 @@ class EditAnimalService {
       volunteer_id,
       name,
       description,
-      kind,
-      gender,
+      kind = "none",
+      gender = "none",
       birth_date,
     }: IAnimalRequest,
     {
@@ -50,7 +50,7 @@ class EditAnimalService {
     const addressesRepository = getCustomRepository(AddressesRepository);
     const usersRepository = getCustomRepository(UsersRepository);
 
-    const animal = await animalsRepository.findOne({ id });
+    const animal = await animalsRepository.findOne(id);
 
     if (!animal) {
       throw new Error("Animal Does Not Exist!");
@@ -64,21 +64,21 @@ class EditAnimalService {
       }
     }
 
-    if (typeof kind !== "undefined") {
-      kind = kind.trim().toLowerCase().charAt(0);
+    kind = kind.trim().toLowerCase();
+    const enumKind =
+      kind === "dog"
+        ? AnimalKind.DOG
+        : kind === "cat"
+        ? AnimalKind.CAT
+        : AnimalKind.NONE;
 
-      if (kind !== kindOptions[0] && kind !== kindOptions[1]) {
-        throw new Error("Kind only be CAT ('c') or DOG ('d')");
-      }
-    }
-
-    if (typeof gender !== "undefined") {
-      gender = gender.trim().toLowerCase().charAt(0);
-
-      if (gender !== genderOptions[0] && gender !== genderOptions[1]) {
-        throw new Error("Gender can only be MALE ('m') or FEMALE ('f')");
-      }
-    }
+    gender = gender.trim().toLowerCase();
+    const enumGender =
+      gender === "female"
+        ? AnimalGender.FEMALE
+        : gender === "male"
+        ? AnimalGender.MALE
+        : AnimalGender.NONE;
 
     try {
       const address = await addressesRepository.findOneOrFail({
@@ -88,8 +88,8 @@ class EditAnimalService {
       const updatedAnimalData = Object.assign(animal, {
         name,
         description,
-        kind,
-        gender,
+        kind: enumKind,
+        gender: enumGender,
         birth_date,
       });
 
@@ -107,8 +107,7 @@ class EditAnimalService {
 
       return { updatedAnimal, updatedAddress };
     } catch (error) {
-      console.log(error);
-      throw new Error("Animal Could Not be Edited");
+      throw new Error(`Animal Could Not be Edited (${error})`);
     }
   }
 }

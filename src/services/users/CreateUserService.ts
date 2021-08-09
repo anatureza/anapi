@@ -12,7 +12,7 @@ interface IUserRequest {
   password: string;
   phone_number: string;
   birth_date: Date;
-  type?: UserType;
+  type?: string;
   authorizes_image?: boolean;
 }
 
@@ -33,7 +33,7 @@ class CreateUserService {
       password,
       phone_number,
       birth_date,
-      type = UserType.USER,
+      type = "user",
       authorizes_image = false,
     }: IUserRequest,
     { place, number, complement, neighborhood, zip, city }: IUserAddressRequest
@@ -59,6 +59,14 @@ class CreateUserService {
 
     const passwordHash = await hash(password, 8);
 
+    type = type.trim().toLowerCase();
+    const enumType =
+      type === "admin"
+        ? UserType.ADMIN
+        : type === "volunteer"
+        ? UserType.VOLUNTEER
+        : UserType.USER;
+
     const userAddress = addressRepository.create({
       place,
       number,
@@ -77,7 +85,7 @@ class CreateUserService {
         password: passwordHash,
         phone_number,
         birth_date,
-        type,
+        type: enumType,
         authorizes_image,
       });
 

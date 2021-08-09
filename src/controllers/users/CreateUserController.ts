@@ -13,6 +13,7 @@ class CreateUserController {
       phone_number,
       birth_date,
       authorizes_image,
+      type,
     } = req.body;
 
     const createUserService = new CreateUserService();
@@ -25,6 +26,7 @@ class CreateUserController {
         phone_number,
         birth_date,
         authorizes_image,
+        type,
       },
       {
         place,

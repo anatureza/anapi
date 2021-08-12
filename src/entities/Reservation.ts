@@ -1,15 +1,24 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
+  OneToOne,
   PrimaryColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { v4 as uuid } from "uuid";
+import { ReservationQuiz } from "./ReservationQuiz";
 import { Animal } from "./Animal";
-import { Answer } from "./Answer";
 import { User } from "./User";
+
+export enum ReservationStatus {
+  NEW = "new",
+  APPROVED = "approved",
+  DISAPPROVED = "disapproved",
+  ADOPTED = "adopted",
+}
 
 @Entity("reservations")
 class Reservation {
@@ -23,19 +32,29 @@ class Reservation {
   userAdopter: User;
 
   @Column({ type: "uuid" })
-  volunteer_id: string;
-  @JoinColumn({ name: "volunteer_id" })
-  @ManyToOne(() => User)
-  userVolunteer: User;
-
-  @Column({ type: "uuid" })
   animal_id: string;
   @JoinColumn({ name: "animal_id" })
   @ManyToOne(() => Animal)
   animal: Animal;
 
-  @OneToMany(() => Answer, (answer) => answer.reservation)
-  answers: Answer[];
+  @Column({
+    type: "enum",
+    enum: ReservationStatus,
+    default: ReservationStatus.NEW,
+  })
+  status: ReservationStatus;
+
+  @Column({ type: "uuid" })
+  quiz_id: string;
+  @OneToOne(() => ReservationQuiz)
+  @JoinColumn({ name: "quiz_id" })
+  quiz: ReservationQuiz;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 
   constructor() {
     if (!this.id) {

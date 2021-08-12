@@ -18,6 +18,12 @@ import { ShowAnimalController } from "./controllers/animals/ShowAnimalController
 import { ListAnimalsController } from "./controllers/animals/ListAnimalsController";
 import { EditAnimalController } from "./controllers/animals/EditAnimalController";
 import { DeleteAnimalController } from "./controllers/animals/DeleteAnimalController";
+import { ListAnimalReservationsController } from "./controllers/animals/ListAnimalReservationsController";
+
+import { CreateReservationController } from "./controllers/reservations/CreateReservationController";
+import { ApproveOrNotReservationController } from "./controllers/reservations/ApproveOrNotReservationController";
+import { ConfirmAdoptionController } from "./controllers/reservations/ConfirmAdoptionController";
+import { ListNewReservationsController } from "./controllers/reservations/ListNewReservationsController";
 
 const router = Router();
 
@@ -34,6 +40,13 @@ const showAnimalController = new ShowAnimalController();
 const listAnimalsController = new ListAnimalsController();
 const editAnimalController = new EditAnimalController();
 const deleteAnimalController = new DeleteAnimalController();
+const listAnimalReservationsController = new ListAnimalReservationsController();
+
+const createReservationController = new CreateReservationController();
+const approveOrNotReservationController =
+  new ApproveOrNotReservationController();
+const confirmAdoptionController = new ConfirmAdoptionController();
+const listNewReservationsController = new ListNewReservationsController();
 
 router.post("/login", authenticateUser.handle);
 router.post("/user", createUserController.handle);
@@ -76,6 +89,48 @@ router.delete(
   ensureAuthenticated,
   ensureAtLeastVolunteer,
   deleteAnimalController.handle
+);
+router.get(
+  "/animal/reservations/:animal_id",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  listAnimalReservationsController.handle
+);
+
+router.post(
+  "/reservation",
+  ensureAuthenticated,
+  createReservationController.handle
+);
+router.post(
+  "/reservation/resolve/:reservation_id",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  approveOrNotReservationController.handle
+);
+router.post(
+  "/reservation/adopt/:reservation_id",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  confirmAdoptionController.handle
+);
+router.get(
+  "/reservations/new",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  listNewReservationsController.handle
+);
+router.get(
+  "/reservations/approved",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  listNewReservationsController.handle
+);
+router.get(
+  "/reservations/disapproved",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  listNewReservationsController.handle
 );
 
 export { router };

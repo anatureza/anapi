@@ -16,12 +16,12 @@ export class CreateReservations1626791589698 implements MigrationInterface {
             type: "uuid",
           },
           {
-            name: "volunteer_id",
+            name: "animal_id",
             type: "uuid",
           },
           {
-            name: "animal_id",
-            type: "uuid",
+            name: "status",
+            type: "enum",
           },
           {
             name: "created_at",
@@ -40,14 +40,6 @@ export class CreateReservations1626791589698 implements MigrationInterface {
             referencedTableName: "users",
             referencedColumnNames: ["id"],
             columnNames: ["adopter_id"],
-            onDelete: "SET NULL",
-            onUpdate: "SET NULL",
-          },
-          {
-            name: "FKVolunteerId",
-            referencedTableName: "users",
-            referencedColumnNames: ["id"],
-            columnNames: ["volunteer_id"],
             onDelete: "SET NULL",
             onUpdate: "SET NULL",
           },

@@ -44,7 +44,12 @@ class User {
   @Column()
   birth_date: Date;
 
-  @Column({ type: "enum", enum: UserType, default: UserType.USER })
+  @Column({
+    type: "enum",
+    enum: UserType,
+    nullable: false,
+    default: UserType.USER,
+  })
   type: UserType;
 
   @Column()

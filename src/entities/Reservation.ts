@@ -40,6 +40,7 @@ class Reservation {
   @Column({
     type: "enum",
     enum: ReservationStatus,
+    nullable: false,
     default: ReservationStatus.NEW,
   })
   status: ReservationStatus;

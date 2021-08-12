@@ -35,6 +35,13 @@ class EditUserService {
       throw new Error("User Not Found");
     }
 
+    const birthDate = new Date(birth_date);
+    const now = new Date(Date.now());
+
+    if (birthDate.getTime() > now.getTime()) {
+      throw new Error("Invalid Date");
+    }
+
     try {
       await usersRepository.update(
         {
@@ -43,7 +50,7 @@ class EditUserService {
         {
           name,
           phone_number,
-          birth_date,
+          birth_date: birthDate,
           authorizes_image,
         }
       );

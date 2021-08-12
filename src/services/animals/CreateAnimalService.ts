@@ -19,8 +19,8 @@ class CreateAnimalService {
     address_id,
     name,
     description,
-    kind = "none",
-    gender = "none",
+    kind,
+    gender,
     birth_date,
   }: IAnimalRequest) {
     const animalsRepository = getCustomRepository(AnimalsRepository);
@@ -39,24 +39,17 @@ class CreateAnimalService {
       throw new Error("Address Id does not exist!");
     }
 
-    kind = kind.trim().toLowerCase();
-    const enumKind =
-      kind === "dog"
-        ? AnimalKind.DOG
-        : kind === "cat"
-        ? AnimalKind.CAT
-        : AnimalKind.NONE;
+    kind = kind.trim().toUpperCase();
+    const enumKind = AnimalKind[kind];
 
-    gender = gender.trim().toLowerCase();
-    const enumGender =
-      gender === "female"
-        ? AnimalGender.FEMALE
-        : gender === "male"
-        ? AnimalGender.MALE
-        : AnimalGender.NONE;
+    gender = gender.trim().toUpperCase();
+    const enumGender = AnimalGender[gender];
 
-    if (birth_date.valueOf() < Date.now().valueOf()) {
-      throw new Error("Animal must be born first");
+    const birthDate = new Date(birth_date);
+    const now = new Date(Date.now());
+
+    if (birthDate.getTime() > now.getTime()) {
+      throw new Error("Invalid Date");
     }
 
     const animal = animalsRepository.create({
@@ -66,7 +59,7 @@ class CreateAnimalService {
       description,
       kind: enumKind,
       gender: enumGender,
-      birth_date,
+      birth_date: birthDate,
       available: true,
     });
 

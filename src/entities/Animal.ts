@@ -50,10 +50,20 @@ class Animal {
   @Column()
   available: boolean;
 
-  @Column({ type: "enum", enum: AnimalKind, default: AnimalKind.NONE })
-  kind: AnimalKind;
+  @Column({
+    type: "enum",
+    enum: AnimalKind,
+    nullable: false,
+    default: AnimalKind.NONE,
+  })
+  public kind!: AnimalKind;
 
-  @Column({ type: "enum", enum: AnimalGender, default: AnimalGender.NONE })
+  @Column({
+    type: "enum",
+    enum: AnimalGender,
+    nullable: false,
+    default: AnimalGender.NONE,
+  })
   gender: AnimalGender;
 
   @Column()

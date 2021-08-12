@@ -33,8 +33,8 @@ class EditAnimalService {
       volunteer_id,
       name,
       description,
-      kind = "none",
-      gender = "none",
+      kind,
+      gender,
       birth_date,
     }: IAnimalRequest,
     {
@@ -64,21 +64,18 @@ class EditAnimalService {
       }
     }
 
-    kind = kind.trim().toLowerCase();
-    const enumKind =
-      kind === "dog"
-        ? AnimalKind.DOG
-        : kind === "cat"
-        ? AnimalKind.CAT
-        : AnimalKind.NONE;
+    kind = kind.trim().toUpperCase();
+    const enumKind = AnimalKind[kind];
 
-    gender = gender.trim().toLowerCase();
-    const enumGender =
-      gender === "female"
-        ? AnimalGender.FEMALE
-        : gender === "male"
-        ? AnimalGender.MALE
-        : AnimalGender.NONE;
+    gender = gender.trim().toUpperCase();
+    const enumGender = AnimalGender[gender];
+
+    const birthDate = new Date(birth_date);
+    const now = new Date(Date.now());
+
+    if (birthDate.getTime() > now.getTime()) {
+      throw new Error("Invalid Date");
+    }
 
     try {
       await animalsRepository.update(
@@ -88,7 +85,7 @@ class EditAnimalService {
           description,
           kind: enumKind,
           gender: enumGender,
-          birth_date,
+          birth_date: birthDate,
         }
       );
       await addressesRepository.update(
@@ -109,6 +106,7 @@ class EditAnimalService {
           relations: ["address"],
         }
       );
+
       return updatedAnimal;
     } catch (error) {
       throw new Error(`Animal Could Not be Edited (${error})`);

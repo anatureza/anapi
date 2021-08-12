@@ -33,7 +33,7 @@ class CreateUserService {
       password,
       phone_number,
       birth_date,
-      type = "user",
+      type,
       authorizes_image = false,
     }: IUserRequest,
     { place, number, complement, neighborhood, zip, city }: IUserAddressRequest
@@ -57,15 +57,17 @@ class CreateUserService {
       throw new Error("Phone number is already in use!");
     }
 
-    const passwordHash = await hash(password, 8);
+    type = type.trim().toUpperCase();
+    const enumType = UserType[type];
 
-    type = type.trim().toLowerCase();
-    const enumType =
-      type === "admin"
-        ? UserType.ADMIN
-        : type === "volunteer"
-        ? UserType.VOLUNTEER
-        : UserType.USER;
+    const birthDate = new Date(birth_date);
+    const now = new Date(Date.now());
+
+    if (birthDate.getTime() > now.getTime()) {
+      throw new Error("Invalid Date");
+    }
+
+    const passwordHash = await hash(password, 8);
 
     const userAddress = addressRepository.create({
       place,
@@ -84,7 +86,7 @@ class CreateUserService {
         address_id: userAddress.id,
         password: passwordHash,
         phone_number,
-        birth_date,
+        birth_date: birthDate,
         type: enumType,
         authorizes_image,
       });
@@ -93,7 +95,7 @@ class CreateUserService {
       return classToPlain([user, userAddress]);
     } catch (error) {
       await addressRepository.delete({ id: userAddress.id });
-      throw new Error(`User Could Not Be Created why?(${error})`);
+      throw new Error(`User Could Not Be Created (${error})`);
     }
   }
 }

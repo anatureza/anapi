@@ -10,6 +10,9 @@ import { ListAllUsersController } from "./controllers/users/ListAllUsersControll
 import { EditUserController } from "./controllers/users/EditUserController";
 import { DeleteUserController } from "./controllers/users/DeleteUserController";
 import { DeleteSpecificUserController } from "./controllers/users/DeleteSpecificUserController";
+import multer from "multer";
+import uploadConfig from "./config/upload";
+import { UpdateUserAvatarController } from "./controllers/users/UpdateUserAvatarController";
 
 import { AuthenticateUserController } from "./controllers/auth/AuthenticateUserController";
 
@@ -39,6 +42,9 @@ const editUserController = new EditUserController();
 const deleteUserController = new DeleteUserController();
 const deleteSpecificUserController = new DeleteSpecificUserController();
 const listAllUsersController = new ListAllUsersController();
+
+const upload = multer(uploadConfig);
+const updateUserAvatarController = new UpdateUserAvatarController();
 
 const createAnimalController = new CreateAnimalController();
 const showAnimalController = new ShowAnimalController();
@@ -78,6 +84,12 @@ router.get(
   ensureAuthenticated,
   ensureAtLeastVolunteer,
   listAllUsersController.handle
+);
+router.patch(
+  "/user/avatar",
+  ensureAuthenticated,
+  upload.single("avatar"),
+  updateUserAvatarController.handle
 );
 
 router.post(

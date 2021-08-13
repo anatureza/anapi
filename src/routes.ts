@@ -25,6 +25,11 @@ import { ApproveOrNotReservationController } from "./controllers/reservations/Ap
 import { ConfirmAdoptionController } from "./controllers/reservations/ConfirmAdoptionController";
 import { ListNewReservationsController } from "./controllers/reservations/ListNewReservationsController";
 
+import { CreateTaskController } from "./controllers/tasks/CreateTaskController";
+import { ListTasksFromAnimalController } from "./controllers/tasks/ListTasksFromAnimalController";
+import { EditTaskController } from "./controllers/tasks/EditTaskController";
+import { DeleteTaskController } from "./controllers/tasks/DeleteTaskController";
+
 const router = Router();
 
 const authenticateUser = new AuthenticateUserController();
@@ -47,6 +52,11 @@ const approveOrNotReservationController =
   new ApproveOrNotReservationController();
 const confirmAdoptionController = new ConfirmAdoptionController();
 const listNewReservationsController = new ListNewReservationsController();
+
+const createTaskController = new CreateTaskController();
+const listTasksFromAnimalController = new ListTasksFromAnimalController();
+const editTaskController = new EditTaskController();
+const deleteTaskController = new DeleteTaskController();
 
 router.post("/login", authenticateUser.handle);
 router.post("/user", createUserController.handle);
@@ -131,6 +141,31 @@ router.get(
   ensureAuthenticated,
   ensureAtLeastVolunteer,
   listNewReservationsController.handle
+);
+
+router.post(
+  "/task/:animal_id",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  createTaskController.handle
+);
+router.get(
+  "/tasks/:animal_id",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  listTasksFromAnimalController.handle
+);
+router.put(
+  "/task/:task_id",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  editTaskController.handle
+);
+router.delete(
+  "/task/:task_id",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  deleteTaskController.handle
 );
 
 export { router };

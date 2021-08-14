@@ -1,3 +1,5 @@
+import path from "path";
+
 import "reflect-metadata";
 import express, { NextFunction, Request, Response } from "express";
 import "express-async-errors";
@@ -8,6 +10,8 @@ import "./database";
 const app = express();
 
 app.use(express.json());
+
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
 app.use(router);
 

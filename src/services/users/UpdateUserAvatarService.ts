@@ -9,11 +9,11 @@ import { UsersRepository } from "../../repositories/UsersRepository";
 
 interface IUserAvatarRequest {
   user_id: string;
-  avatarFilename: string;
+  requestAvatar: Express.Multer.File;
 }
 
 class UpdateUserAvatarService {
-  async execute({ user_id, avatarFilename }: IUserAvatarRequest) {
+  async execute({ user_id, requestAvatar }: IUserAvatarRequest) {
     const usersRepository = getCustomRepository(UsersRepository);
 
     const user = await usersRepository.findOne(user_id);
@@ -23,7 +23,7 @@ class UpdateUserAvatarService {
     }
 
     if (user.avatar) {
-      const userAvatarFilePath = path.join(uploadConfig.directory);
+      const userAvatarFilePath = path.join(uploadConfig.directory, user.avatar);
       const userAvatarFileExists = await fs.promises.stat(userAvatarFilePath);
 
       if (userAvatarFileExists) {
@@ -31,11 +31,11 @@ class UpdateUserAvatarService {
       }
     }
 
-    user.avatar = avatarFilename;
+    user.avatar = requestAvatar.filename;
 
-    await usersRepository.save(user);
+    const updatedUserAvatar = await usersRepository.save(user);
 
-    return user;
+    return updatedUserAvatar;
   }
 }
 

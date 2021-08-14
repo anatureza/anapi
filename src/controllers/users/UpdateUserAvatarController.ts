@@ -6,11 +6,11 @@ class UpdateUserAvatarController {
   async handle(req: Request, res: Response) {
     const { user_id } = req;
 
-    const avatarFilename = req.file.filename;
+    const requestAvatar = req.file;
 
     const updateUserAvatarService = new UpdateUserAvatarService();
 
-    const user = updateUserAvatarService.execute({ user_id, avatarFilename });
+    const user = updateUserAvatarService.execute({ user_id, requestAvatar });
 
     return res.json(user);
   }

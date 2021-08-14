@@ -1,5 +1,12 @@
+import path from "path";
+import fs from "fs";
+
+import uploadConfig from "../../config/upload";
+
 import { getCustomRepository } from "typeorm";
+
 import { UserType } from "../../entities/User";
+
 import { AddressesRepository } from "../../repositories/AddressesRepository";
 import { UsersRepository } from "../../repositories/UsersRepository";
 
@@ -42,6 +49,18 @@ class DeleteUserService {
       await addressesRepository.delete({
         id: userToBeDeleted.address_id,
       });
+
+      if (userToBeDeleted.avatar) {
+        const userToBeDeletedAvatarFilePath = path.join(uploadConfig.directory);
+        const userToBeDeletedAvatarFileExists = await fs.promises.stat(
+          userToBeDeletedAvatarFilePath
+        );
+
+        if (userToBeDeletedAvatarFileExists) {
+          await fs.promises.unlink(userToBeDeletedAvatarFilePath);
+        }
+      }
+
       return { message: `User ${userToBeDeleted.name} deleted` };
     } catch {
       throw new Error("User Could Not Be Deleted");

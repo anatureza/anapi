@@ -9,7 +9,9 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from "typeorm";
+import { Expose } from "class-transformer";
 import { v4 as uuid } from "uuid";
+
 import { Address } from "./Address";
 import { Image } from "./Image";
 import { User } from "./User";
@@ -82,6 +84,15 @@ class Animal {
   })
   @JoinColumn({ name: "animal_id" })
   images: Image[];
+
+  @Expose({ name: "main_image_url" })
+  getAvatarURL(): string | null {
+    if (!this.images) {
+      return null;
+    }
+
+    return `${process.env.APP_API_URL}/uploads/${this.images[0].path}`;
+  }
 
   constructor() {
     if (!this.id) {

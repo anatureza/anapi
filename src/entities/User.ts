@@ -7,8 +7,9 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Exclude } from "class-transformer";
+import { Exclude, Expose } from "class-transformer";
 import { v4 as uuid } from "uuid";
+
 import { Address } from "./Address";
 
 export enum UserType {
@@ -63,6 +64,15 @@ class User {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @Expose({ name: "avatar_url" })
+  getAvatarURL(): string | null {
+    if (!this.avatar) {
+      return null;
+    }
+
+    return `${process.env.APP_API_URL}/uploads/${this.avatar}`;
+  }
 
   constructor() {
     if (!this.id) {

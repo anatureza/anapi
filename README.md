@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://www.instagram.com/osamantesdanatureza/"><img src="https://i.imgur.com/CYvCLum.jpg" title="Os Amantes da Natureza" width="200" style="border-radius:8px"/></a>
+  <a href="https://www.instagram.com/osamantesdanatureza/"><img src="https://i.imgur.com/CYvCLum.jpg" title="Os Amantes da Natureza" width="200"/></a>
   <br>
   anapi
   <br>
@@ -38,40 +38,13 @@ $ cd anapi
 $ yarn install
 ```
 
-## Environment variables
-
-### Database
-
-In order to establish a connection with the database you have to create a `.env` file in the root folder and follow this template where I'm using a PostgreSQL DB:
-
-```
-# Database
-DB_HOST=localhost
-DB_PORT=5432
-DB_USERNAME=postgres
-DB_PASSWORD=password
-DB_DATABASE=database_name
-```
-
-> Note: If you have any doubt about connecting to the database or you'd like to use another DB, you should see [TypeORM connection docs](https://typeorm.io/#/connection)
-
-### JWT
-
-You also need to generate a MD5 Hash Code in order to run JWT Authentication.
-
-- You can generate a MD5 Hash [here](https://www.md5hashgenerator.com)
-- Add the hash you generated in the `.env` file you created:
-
-```
-# JWT_Secret
-JWT_SECRET=generated_md5_hash_here
-```
-
 ## Run the app
+
+In order to run the app, you need to create a `.env` file in the root folder, then you should follow the `.env.example`.
 
 ```bash
 # Run migrations
-yarn typeorm migration:run
+$ yarn typeorm migration:run
 
 # Run the app
 $ yarn dev
@@ -93,7 +66,3 @@ This project is being developed with the following technologies:
 # License
 
 This project is under the [MIT](https://github.com/anatureza/anapi/blob/main/LICENSE) license
-
-# Credits
-
-- Thanks [@amitmerchant1990](https://github.com/amitmerchant1990) for the README template

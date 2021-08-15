@@ -11,6 +11,10 @@ class CreateAnimalController {
 
     const { user_id } = req;
 
+    const requestImages = req.files
+      ? (req.files as Express.Multer.File[])
+      : null;
+
     const createAddressService = new CreateAddressService();
     const createAnimalService = new CreateAnimalService();
 
@@ -31,6 +35,7 @@ class CreateAnimalController {
       kind,
       gender,
       birth_date,
+      requestImages,
     });
 
     return res.json({ animal, address });

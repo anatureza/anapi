@@ -1,5 +1,9 @@
 import { Router } from "express";
 
+import multer from "multer";
+import uploadConfig from "./config/upload";
+const upload = multer(uploadConfig);
+
 import { ensureAuthenticated } from "./middlewares/ensureAuthenticated";
 import { ensureAtLeastVolunteer } from "./middlewares/ensureAtLeastVolunteer";
 import { ensureAdmin } from "./middlewares/ensureAdmin";
@@ -10,8 +14,6 @@ import { ListAllUsersController } from "./controllers/users/ListAllUsersControll
 import { EditUserController } from "./controllers/users/EditUserController";
 import { DeleteUserController } from "./controllers/users/DeleteUserController";
 import { DeleteSpecificUserController } from "./controllers/users/DeleteSpecificUserController";
-import multer from "multer";
-import uploadConfig from "./config/upload";
 import { UpdateUserAvatarController } from "./controllers/users/UpdateUserAvatarController";
 
 import { AuthenticateUserController } from "./controllers/auth/AuthenticateUserController";
@@ -43,7 +45,6 @@ const deleteUserController = new DeleteUserController();
 const deleteSpecificUserController = new DeleteSpecificUserController();
 const listAllUsersController = new ListAllUsersController();
 
-const upload = multer(uploadConfig);
 const updateUserAvatarController = new UpdateUserAvatarController();
 
 const createAnimalController = new CreateAnimalController();
@@ -96,6 +97,7 @@ router.post(
   "/animal",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
+  upload.array("images"),
   createAnimalController.handle
 );
 router.get("/animal/:id", showAnimalController.handle);

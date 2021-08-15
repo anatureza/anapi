@@ -7,9 +7,11 @@ import {
   PrimaryColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { Address } from "./Address";
+import { Image } from "./Image";
 import { User } from "./User";
 
 export enum AnimalKind {
@@ -56,7 +58,7 @@ class Animal {
     nullable: false,
     default: AnimalKind.NONE,
   })
-  public kind!: AnimalKind;
+  kind!: AnimalKind;
 
   @Column({
     type: "enum",
@@ -74,6 +76,12 @@ class Animal {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @OneToMany(() => Image, (image) => image.animal, {
+    cascade: ["insert", "update"],
+  })
+  @JoinColumn({ name: "animal_id" })
+  images: Image[];
 
   constructor() {
     if (!this.id) {

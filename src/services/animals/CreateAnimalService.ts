@@ -11,6 +11,7 @@ interface IAnimalRequest {
   kind?: string;
   gender?: string;
   birth_date: Date;
+  requestImages?: Express.Multer.File[];
 }
 
 class CreateAnimalService {
@@ -22,6 +23,7 @@ class CreateAnimalService {
     kind,
     gender,
     birth_date,
+    requestImages,
   }: IAnimalRequest) {
     const animalsRepository = getCustomRepository(AnimalsRepository);
     const usersRepository = getCustomRepository(UsersRepository);
@@ -52,6 +54,12 @@ class CreateAnimalService {
       throw new Error("Invalid Date");
     }
 
+    const images = requestImages
+      ? requestImages.map((image) => {
+          return { path: image.filename };
+        })
+      : null;
+
     const animal = animalsRepository.create({
       volunteer_id,
       address_id,
@@ -61,6 +69,7 @@ class CreateAnimalService {
       gender: enumGender,
       birth_date: birthDate,
       available: true,
+      images,
     });
 
     await animalsRepository.save(animal);

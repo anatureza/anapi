@@ -50,7 +50,7 @@ $ yarn typeorm migration:run
 $ yarn dev
 ```
 
-Now the app will be running on `http://localhost:3000`
+Now the app will be running on `http://localhost:3333`
 
 # Technologies
 

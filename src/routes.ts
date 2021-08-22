@@ -26,7 +26,8 @@ import { DeleteAnimalController } from "./controllers/animals/DeleteAnimalContro
 import { ListAnimalReservationsController } from "./controllers/animals/ListAnimalReservationsController";
 
 import { CreateReservationController } from "./controllers/reservations/CreateReservationController";
-import { ApproveOrNotReservationController } from "./controllers/reservations/ApproveOrNotReservationController";
+import { ApproveReservationController } from "./controllers/reservations/ApproveReservationController";
+import { DisapproveReservationController } from "./controllers/reservations/DisapproveReservationController";
 import { ConfirmAdoptionController } from "./controllers/reservations/ConfirmAdoptionController";
 import { ListNewReservationsController } from "./controllers/reservations/ListNewReservationsController";
 
@@ -55,8 +56,8 @@ const deleteAnimalController = new DeleteAnimalController();
 const listAnimalReservationsController = new ListAnimalReservationsController();
 
 const createReservationController = new CreateReservationController();
-const approveOrNotReservationController =
-  new ApproveOrNotReservationController();
+const approveReservationController = new ApproveReservationController();
+const disapproveReservationController = new DisapproveReservationController();
 const confirmAdoptionController = new ConfirmAdoptionController();
 const listNewReservationsController = new ListNewReservationsController();
 
@@ -127,10 +128,16 @@ router.post(
   createReservationController.handle
 );
 router.post(
-  "/reservation/resolve/:reservation_id",
+  "/reservation/approve/:reservation_id",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  approveOrNotReservationController.handle
+  approveReservationController.handle
+);
+router.post(
+  "/reservation/disapprove/:reservation_id",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  disapproveReservationController.handle
 );
 router.post(
   "/reservation/adopt/:reservation_id",

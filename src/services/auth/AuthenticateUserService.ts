@@ -41,7 +41,7 @@ class AuthenticateUserService {
       }
     );
 
-    return token;
+    return { token, userType: user.type };
   }
 }
 

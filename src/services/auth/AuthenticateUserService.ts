@@ -24,7 +24,7 @@ class AuthenticateUserService {
       throw new Error("Email does not exists!");
     }
 
-    const passwordMatch = compare(password, user.password);
+    const passwordMatch = await compare(password, user.password);
 
     if (!passwordMatch) {
       throw new Error("Email/Password incorrect!");
@@ -41,7 +41,7 @@ class AuthenticateUserService {
       }
     );
 
-    return { token, userType: user.type };
+    return { token, userType: user.type, userId: user.id };
   }
 }
 

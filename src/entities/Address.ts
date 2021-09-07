@@ -16,8 +16,8 @@ class Address {
   @Column()
   place: string;
 
-  @Column()
-  number: number;
+  @Column({ length: "10" })
+  number: string;
 
   @Column()
   complement: string;
@@ -25,8 +25,8 @@ class Address {
   @Column()
   neighborhood: string;
 
-  @Column()
-  zip: number;
+  @Column({ length: "8" })
+  zip: string;
 
   @Column()
   city: string;

@@ -5,10 +5,15 @@ class ShowAuthenticatedUserController {
   async handle(req: Request, res: Response) {
     const showAuthenticatedUserService = new ShowAuthenticatedUserService();
 
-    const { user_id } = req;
+    const { userId } = req.params;
 
-    const user = await showAuthenticatedUserService.execute({ id: user_id });
+    if (!userId) {
+      const { user_id } = req;
+      const user = await showAuthenticatedUserService.execute({ id: user_id });
+      return res.json(user);
+    }
 
+    const user = await showAuthenticatedUserService.execute({ id: userId });
     return res.json(user);
   }
 }

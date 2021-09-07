@@ -73,6 +73,12 @@ router.get(
   ensureAuthenticated,
   showAuthenticatedUserController.handle
 );
+router.get(
+  "/user/:userId",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  showAuthenticatedUserController.handle
+);
 router.put("/user", ensureAuthenticated, editUserController.handle);
 router.delete("/user", ensureAuthenticated, deleteUserController.handle);
 router.delete(

@@ -33,7 +33,7 @@ class CreateUserService {
       password,
       phone_number,
       birth_date,
-      type,
+      type = "user",
       authorizes_image = false,
     }: IUserRequest,
     { place, number, complement, neighborhood, zip, city }: IUserAddressRequest

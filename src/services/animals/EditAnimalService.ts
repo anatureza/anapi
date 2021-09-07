@@ -19,10 +19,10 @@ interface IAnimalRequest {
 
 interface IAnimalAddressRequest {
   place: string;
-  number: number;
+  number: string;
   complement: string;
   neighborhood: string;
-  zip: number;
+  zip: string;
   city: string;
 }
 

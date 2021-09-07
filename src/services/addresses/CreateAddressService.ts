@@ -3,10 +3,10 @@ import { AddressesRepository } from "../../repositories/AddressesRepository";
 
 interface IAddressRequest {
   place: string;
-  number: number;
+  number: string;
   complement: string;
   neighborhood: string;
-  zip: number;
+  zip: string;
   city: string;
 }
 

@@ -14,10 +14,10 @@ interface IUserRequest {
 
 interface IUserAddressRequest {
   place: string;
-  number: number;
+  number: string;
   complement: string;
   neighborhood: string;
-  zip: number;
+  zip: string;
   city: string;
 }
 

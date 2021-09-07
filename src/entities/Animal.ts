@@ -11,10 +11,13 @@ import {
 } from "typeorm";
 import { Expose } from "class-transformer";
 import { v4 as uuid } from "uuid";
+import { config } from "dotenv";
 
 import { Address } from "./Address";
 import { Image } from "./Image";
 import { User } from "./User";
+
+config();
 
 export enum AnimalKind {
   CAT = "cat",

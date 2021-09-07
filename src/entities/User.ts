@@ -9,8 +9,11 @@ import {
 } from "typeorm";
 import { Exclude, Expose } from "class-transformer";
 import { v4 as uuid } from "uuid";
+import { config } from "dotenv";
 
 import { Address } from "./Address";
+
+config();
 
 export enum UserType {
   ADMIN = "admin",

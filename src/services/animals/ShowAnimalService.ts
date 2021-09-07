@@ -9,7 +9,9 @@ class ShowAnimalService {
   async execute({ id }: IAnimalRequest) {
     const animalsRepository = getCustomRepository(AnimalsRepository);
 
-    const animal = await animalsRepository.findOne(id);
+    const animal = await animalsRepository.findOne(id, {
+      relations: ["user", "address", "image"],
+    });
 
     if (!animal) {
       throw new Error("Animal Not Found");

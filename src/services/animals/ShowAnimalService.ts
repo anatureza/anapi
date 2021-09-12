@@ -9,8 +9,9 @@ class ShowAnimalService {
   async execute({ id }: IAnimalRequest) {
     const animalsRepository = getCustomRepository(AnimalsRepository);
 
-    const animal = await animalsRepository.findOne(id, {
-      relations: ["user", "address", "image"],
+    const animal = await animalsRepository.findOne({
+      where: { id },
+      relations: ["user", "address", "images"],
     });
 
     if (!animal) {

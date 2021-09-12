@@ -7,9 +7,9 @@ class ShowAnimalController {
 
     const { id } = req.params;
 
-    const animal = showAnimalService.execute({ id });
+    const animal = await showAnimalService.execute({ id });
 
-    return animal;
+    return res.json(animal);
   }
 }
 

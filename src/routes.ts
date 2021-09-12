@@ -21,6 +21,7 @@ import { AuthenticateUserController } from "./controllers/auth/AuthenticateUserC
 import { CreateAnimalController } from "./controllers/animals/CreateAnimalController";
 import { ShowAnimalController } from "./controllers/animals/ShowAnimalController";
 import { ListAnimalsController } from "./controllers/animals/ListAnimalsController";
+import { ListAnimalsFromAuthUserController } from "./controllers/animals/ListAnimalsFromAuthUserController";
 import { EditAnimalController } from "./controllers/animals/EditAnimalController";
 import { DeleteAnimalController } from "./controllers/animals/DeleteAnimalController";
 import { ListAnimalReservationsController } from "./controllers/animals/ListAnimalReservationsController";
@@ -51,6 +52,8 @@ const updateUserAvatarController = new UpdateUserAvatarController();
 const createAnimalController = new CreateAnimalController();
 const showAnimalController = new ShowAnimalController();
 const listAnimalsController = new ListAnimalsController();
+const listAnimalsFromAuthUserController =
+  new ListAnimalsFromAuthUserController();
 const editAnimalController = new EditAnimalController();
 const deleteAnimalController = new DeleteAnimalController();
 const listAnimalReservationsController = new ListAnimalReservationsController();
@@ -108,7 +111,13 @@ router.post(
   createAnimalController.handle
 );
 router.get("/animal/:id", showAnimalController.handle);
-router.get("/animals", listAnimalsController.handle);
+router.get(
+  "/animals",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  listAnimalsFromAuthUserController.handle
+);
+router.get("/all-animals", listAnimalsController.handle);
 router.put(
   "/animal/:id",
   ensureAuthenticated,

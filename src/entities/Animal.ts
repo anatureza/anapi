@@ -94,7 +94,9 @@ class Animal {
       return null;
     }
 
-    return `${process.env.APP_API_URL}/uploads/${this.images[0].path}`;
+    const [main_image] = this.images;
+
+    return `${process.env.APP_API_URL}/uploads/${main_image.path}`;
   }
 
   constructor() {

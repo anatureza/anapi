@@ -12,7 +12,7 @@ class ListAnimalsFromAuthUserService {
 
     const animals = await animalsRepository.find({
       where: { volunteer_id },
-      relations: ["user", "address"],
+      relations: ["user", "address", "images"],
     });
 
     return classToPlain(animals);

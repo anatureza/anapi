@@ -96,6 +96,10 @@ class Animal {
 
     const [main_image] = this.images;
 
+    if (typeof main_image === "undefined") {
+      return null;
+    }
+
     return `${process.env.APP_API_URL}/uploads/${main_image.path}`;
   }
 

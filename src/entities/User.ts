@@ -42,7 +42,7 @@ class User {
   @Column({ type: "uuid" })
   address_id: string;
   @JoinColumn({ name: "address_id" })
-  @OneToOne(() => Address)
+  @OneToOne(() => Address, { cascade: ["remove"] })
   address: Address;
 
   @Column()

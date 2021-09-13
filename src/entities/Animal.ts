@@ -45,7 +45,7 @@ class Animal {
   @Column({ type: "uuid" })
   address_id: string;
   @JoinColumn({ name: "address_id" })
-  @OneToOne(() => Address)
+  @OneToOne(() => Address, { cascade: ["update", "remove"] })
   address: Address;
 
   @Column()
@@ -83,7 +83,7 @@ class Animal {
   updated_at: Date;
 
   @OneToMany(() => Image, (image) => image.animal, {
-    cascade: ["insert", "update"],
+    cascade: ["insert", "update", "remove"],
   })
   @JoinColumn({ name: "animal_id" })
   images: Image[];

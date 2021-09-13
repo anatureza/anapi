@@ -7,7 +7,7 @@ class ListAnimalsService {
     const animalsRepository = getCustomRepository(AnimalsRepository);
 
     const animals = await animalsRepository.find({
-      relations: ["user", "address"],
+      relations: ["user", "address", "images"],
     });
 
     return classToPlain(animals);

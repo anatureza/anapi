@@ -15,7 +15,7 @@ class DeleteAddressService {
       throw new Error("Address Id does not exist!");
     }
 
-    return await addressesRepository.delete({ id });
+    return await addressesRepository.remove(address);
   }
 }
 

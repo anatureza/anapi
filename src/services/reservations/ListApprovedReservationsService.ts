@@ -7,7 +7,8 @@ class ListApprovedReservationsService {
     const reservationsRepository = getCustomRepository(ReservationsRepository);
 
     const reservations = await reservationsRepository.find({
-      status: ReservationStatus.APPROVED,
+      where: { status: ReservationStatus.APPROVED },
+      relations: ["animal", "userAdopter"],
     });
 
     return reservations;

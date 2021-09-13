@@ -22,6 +22,8 @@ import { CreateAnimalController } from "./controllers/animals/CreateAnimalContro
 import { ShowAnimalController } from "./controllers/animals/ShowAnimalController";
 import { ListAnimalsController } from "./controllers/animals/ListAnimalsController";
 import { ListAnimalsFromAuthUserController } from "./controllers/animals/ListAnimalsFromAuthUserController";
+import { ListAvailableAnimalsController } from "./controllers/animals/ListAvailableAnimalsController";
+import { ListUnavailableAnimalsController } from "./controllers/animals/ListUnavailableAnimalsController";
 import { EditAnimalController } from "./controllers/animals/EditAnimalController";
 import { DeleteAnimalController } from "./controllers/animals/DeleteAnimalController";
 import { ListAnimalReservationsController } from "./controllers/animals/ListAnimalReservationsController";
@@ -54,6 +56,8 @@ const showAnimalController = new ShowAnimalController();
 const listAnimalsController = new ListAnimalsController();
 const listAnimalsFromAuthUserController =
   new ListAnimalsFromAuthUserController();
+const listAvailableAnimalsController = new ListAvailableAnimalsController();
+const listUnavailableAnimalsController = new ListUnavailableAnimalsController();
 const editAnimalController = new EditAnimalController();
 const deleteAnimalController = new DeleteAnimalController();
 const listAnimalReservationsController = new ListAnimalReservationsController();
@@ -117,6 +121,18 @@ router.get(
   ensureAtLeastVolunteer,
   listAnimalsFromAuthUserController.handle
 );
+router.get(
+  "/animals/available",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  listAvailableAnimalsController.handle
+);
+router.get(
+  "/animals/unavailable",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  listUnavailableAnimalsController.handle
+);
 router.get("/all-animals", listAnimalsController.handle);
 router.put(
   "/animal/:id",
@@ -138,7 +154,7 @@ router.get(
 );
 
 router.post(
-  "/reservation",
+  "/reservation/:animal_id",
   ensureAuthenticated,
   createReservationController.handle
 );

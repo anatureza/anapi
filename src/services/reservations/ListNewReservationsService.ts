@@ -8,7 +8,8 @@ class ListNewReservationsService {
     const reservationsRepository = getCustomRepository(ReservationsRepository);
 
     const reservations = await reservationsRepository.find({
-      status: ReservationStatus.NEW,
+      where: { status: ReservationStatus.NEW },
+      relations: ["animal", "userAdopter"],
     });
 
     return reservations;

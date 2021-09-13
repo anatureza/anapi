@@ -7,7 +7,8 @@ class ListDisapprovedReservationsService {
     const reservationsRepository = getCustomRepository(ReservationsRepository);
 
     const reservations = await reservationsRepository.find({
-      status: ReservationStatus.DISAPPROVED,
+      where: { status: ReservationStatus.DISAPPROVED },
+      relations: ["animal", "userAdopter"],
     });
 
     return reservations;

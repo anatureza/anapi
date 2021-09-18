@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { ApproveOrNotReservationService } from "../../services/reservations/ApproveOrNotReservationService";
+import { ApproveReservationService } from "../../services/reservations/ApproveReservationService";
 
 class ApproveReservationController {
   async handle(req: Request, res: Response) {
@@ -8,14 +8,14 @@ class ApproveReservationController {
 
     const { reservation_id } = req.params;
 
-    const approved = true;
+    const { scheduled_at } = req.body;
 
-    const approveOrNotReservationService = new ApproveOrNotReservationService();
+    const approveReservationService = new ApproveReservationService();
 
-    const reservation = approveOrNotReservationService.execute({
+    const reservation = approveReservationService.execute({
       user_id,
       reservation_id,
-      approved,
+      scheduled_at,
     });
 
     return res.json(reservation);

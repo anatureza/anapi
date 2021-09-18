@@ -1,4 +1,4 @@
-import { getCustomRepository } from "typeorm";
+import { getCustomRepository, Not } from "typeorm";
 
 import { ReservationStatus } from "../../entities/Reservation";
 import { UserType } from "../../entities/User";
@@ -46,6 +46,19 @@ class ConfirmAdoptionService {
         { id: reservation.animal_id },
         { available: false }
       );
+
+      const reservationsToBeDisapproved = await reservationsRepository.find({
+        where: { id: Not(reservation_id), animal_id: reservation.animal_id },
+      });
+      try {
+        reservationsToBeDisapproved.forEach((reservation) => {
+          reservationsRepository.update(reservation, {
+            status: ReservationStatus.DISAPPROVED,
+          });
+        });
+      } catch (error) {
+        throw new Error(`Could Not Update Other Reservations! (${error})`);
+      }
 
       return [reservation.animal, reservation];
     } catch (error) {

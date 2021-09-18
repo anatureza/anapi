@@ -51,6 +51,9 @@ class Reservation {
   @JoinColumn({ name: "quiz_id" })
   quiz: ReservationQuiz;
 
+  @Column({ nullable: true })
+  scheduled_at: Date;
+
   @CreateDateColumn()
   created_at: Date;
 

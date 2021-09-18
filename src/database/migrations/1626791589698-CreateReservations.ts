@@ -24,6 +24,11 @@ export class CreateReservations1626791589698 implements MigrationInterface {
             type: "enum",
           },
           {
+            name: "scheduled_at",
+            type: "date",
+            isNullable: true,
+          },
+          {
             name: "created_at",
             type: "timestamp",
             default: "now()",

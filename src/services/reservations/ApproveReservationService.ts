@@ -7,11 +7,15 @@ import { UsersRepository } from "../../repositories/UsersRepository";
 interface IReservationRequest {
   reservation_id: string;
   user_id: string;
-  approved: boolean;
+  scheduled_at: string;
 }
 
-class ApproveOrNotReservationService {
-  async execute({ reservation_id, user_id, approved }: IReservationRequest) {
+class ApproveReservationService {
+  async execute({
+    reservation_id,
+    user_id,
+    scheduled_at,
+  }: IReservationRequest) {
     const reservationsRepository = getCustomRepository(ReservationsRepository);
     const usersRepository = getCustomRepository(UsersRepository);
 
@@ -32,29 +36,21 @@ class ApproveOrNotReservationService {
     }
 
     try {
-      if (approved) {
-        await reservationsRepository.update(
-          { id: reservation_id },
-          {
-            status: ReservationStatus.APPROVED,
-          }
-        );
-
-        return [reservation.animal, reservation];
-      }
-
+      // TODO: Verify other reservations from animal
+      // *There cannot be a new approved reservation scheduled_date before another
       await reservationsRepository.update(
         { id: reservation_id },
         {
-          status: ReservationStatus.DISAPPROVED,
+          status: ReservationStatus.APPROVED,
+          scheduled_at,
         }
       );
 
-      return reservation;
+      return [reservation.animal, reservation];
     } catch (error) {
-      throw new Error("Reservation Status Error");
+      throw new Error("Reservation Approval Error");
     }
   }
 }
 
-export { ApproveOrNotReservationService };
+export { ApproveReservationService };

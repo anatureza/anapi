@@ -1,3 +1,4 @@
+import { classToPlain } from "class-transformer";
 import { getCustomRepository } from "typeorm";
 import { ReservationStatus } from "../../entities/Reservation";
 import { ReservationsRepository } from "../../repositories/ReservationsRepository";
@@ -11,7 +12,7 @@ class ListDisapprovedReservationsService {
       relations: ["animal", "userAdopter"],
     });
 
-    return reservations;
+    return classToPlain(reservations);
   }
 }
 

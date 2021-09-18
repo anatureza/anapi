@@ -12,6 +12,7 @@ import { v4 as uuid } from "uuid";
 import { ReservationQuiz } from "./ReservationQuiz";
 import { Animal } from "./Animal";
 import { User } from "./User";
+import { Expose } from "class-transformer";
 
 export enum ReservationStatus {
   NEW = "new",
@@ -24,6 +25,11 @@ export enum ReservationStatus {
 class Reservation {
   @PrimaryColumn({ type: "uuid" })
   readonly id: string;
+
+  @Expose({ name: "volunteer_id" })
+  getVolunteerId(): string {
+    return `${this.animal.volunteer_id}`;
+  }
 
   @Column({ type: "uuid" })
   adopter_id: string;

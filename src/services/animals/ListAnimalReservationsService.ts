@@ -1,3 +1,4 @@
+import { classToPlain } from "class-transformer";
 import { getCustomRepository } from "typeorm";
 
 import { AnimalsRepository } from "../../repositories/AnimalsRepository";
@@ -22,7 +23,7 @@ class ListAnimalReservationsService {
       animal_id,
     });
 
-    return reservations;
+    return classToPlain(reservations);
   }
 }
 

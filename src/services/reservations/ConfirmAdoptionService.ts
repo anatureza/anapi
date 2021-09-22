@@ -18,7 +18,9 @@ class ConfirmAdoptionService {
     const usersRepository = getCustomRepository(UsersRepository);
     const animalsRepository = getCustomRepository(AnimalsRepository);
 
-    const reservation = await reservationsRepository.findOne(reservation_id);
+    const reservation = await reservationsRepository.findOne(reservation_id, {
+      relations: ["animal"],
+    });
 
     if (!reservation) {
       throw new Error("Reservation Does Not Exist!");

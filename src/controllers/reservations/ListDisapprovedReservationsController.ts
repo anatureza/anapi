@@ -3,12 +3,11 @@ import { ListDisapprovedReservationsService } from "../../services/reservations/
 
 class ListDisapprovedReservationsController {
   async handle(req: Request, res: Response) {
-    const listDisapprovedReservationsService =
-      new ListDisapprovedReservationsService();
+    const listDisapprovedReservationsService = new ListDisapprovedReservationsService();
 
-    const reservations = listDisapprovedReservationsService.execute();
+    const reservations = await listDisapprovedReservationsService.execute();
 
-    return reservations;
+    return res.json(reservations);
   }
 }
 

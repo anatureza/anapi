@@ -8,8 +8,6 @@ class DisapproveReservationController {
 
     const { reservation_id } = req.params;
 
-    const approved = false;
-
     const disapproveReservationService = new DisapproveReservationService();
 
     const reservation = disapproveReservationService.execute({

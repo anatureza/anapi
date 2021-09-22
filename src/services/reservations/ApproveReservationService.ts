@@ -21,7 +21,9 @@ class ApproveReservationService {
 
     const user = await usersRepository.findOne(user_id);
 
-    const reservation = await reservationsRepository.findOne(reservation_id);
+    const reservation = await reservationsRepository.findOne(reservation_id, {
+      relations: ["animal"],
+    });
 
     if (!reservation) {
       throw new Error("Reservation Does Not Exist");

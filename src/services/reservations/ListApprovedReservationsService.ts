@@ -12,6 +12,10 @@ class ListApprovedReservationsService {
       relations: ["animal", "userAdopter"],
     });
 
+    if (reservations.length <= 0) {
+      return [];
+    }
+
     return classToPlain(reservations);
   }
 }

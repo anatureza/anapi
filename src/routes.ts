@@ -33,6 +33,8 @@ import { ApproveReservationController } from "./controllers/reservations/Approve
 import { DisapproveReservationController } from "./controllers/reservations/DisapproveReservationController";
 import { ConfirmAdoptionController } from "./controllers/reservations/ConfirmAdoptionController";
 import { ListNewReservationsController } from "./controllers/reservations/ListNewReservationsController";
+import { ListApprovedReservationsController } from "./controllers/reservations/ListApprovedReservationsController";
+import { ListDisapprovedReservationsController } from "./controllers/reservations/ListDisapprovedReservationsController";
 
 import { CreateTaskController } from "./controllers/tasks/CreateTaskController";
 import { ListTasksFromAnimalController } from "./controllers/tasks/ListTasksFromAnimalController";
@@ -54,8 +56,7 @@ const updateUserAvatarController = new UpdateUserAvatarController();
 const createAnimalController = new CreateAnimalController();
 const showAnimalController = new ShowAnimalController();
 const listAnimalsController = new ListAnimalsController();
-const listAnimalsFromAuthUserController =
-  new ListAnimalsFromAuthUserController();
+const listAnimalsFromAuthUserController = new ListAnimalsFromAuthUserController();
 const listAvailableAnimalsController = new ListAvailableAnimalsController();
 const listUnavailableAnimalsController = new ListUnavailableAnimalsController();
 const editAnimalController = new EditAnimalController();
@@ -67,6 +68,8 @@ const approveReservationController = new ApproveReservationController();
 const disapproveReservationController = new DisapproveReservationController();
 const confirmAdoptionController = new ConfirmAdoptionController();
 const listNewReservationsController = new ListNewReservationsController();
+const listApprovedReservationsController = new ListApprovedReservationsController();
+const listDisapprovedReservationsController = new ListDisapprovedReservationsController();
 
 const createTaskController = new CreateTaskController();
 const listTasksFromAnimalController = new ListTasksFromAnimalController();
@@ -186,13 +189,13 @@ router.get(
   "/reservations/approved",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  listNewReservationsController.handle
+  listApprovedReservationsController.handle
 );
 router.get(
   "/reservations/disapproved",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  listNewReservationsController.handle
+  listDisapprovedReservationsController.handle
 );
 
 router.post(

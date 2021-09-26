@@ -45,11 +45,6 @@ class DeleteUserService {
     const userToBeDeleted = await usersRepository.findOne(userIdToBeDeleted);
 
     try {
-      await usersRepository.delete(userToBeDeleted.id);
-      await addressesRepository.delete({
-        id: userToBeDeleted.address_id,
-      });
-
       if (userToBeDeleted.avatar) {
         const userToBeDeletedAvatarFilePath = path.join(uploadConfig.directory);
         const userToBeDeletedAvatarFileExists = await fs.promises.stat(
@@ -60,6 +55,8 @@ class DeleteUserService {
           await fs.promises.unlink(userToBeDeletedAvatarFilePath);
         }
       }
+
+      await usersRepository.remove(userToBeDeleted);
 
       return { message: `User ${userToBeDeleted.name} deleted` };
     } catch {

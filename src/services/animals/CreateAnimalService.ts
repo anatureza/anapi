@@ -3,6 +3,9 @@ import { AnimalGender, AnimalKind } from "../../entities/Animal";
 import { AddressesRepository } from "../../repositories/AddressesRepository";
 import { AnimalsRepository } from "../../repositories/AnimalsRepository";
 import { UsersRepository } from "../../repositories/UsersRepository";
+
+import moment from "moment";
+
 interface IAnimalRequest {
   volunteer_id: string;
   address_id: string;
@@ -47,10 +50,7 @@ class CreateAnimalService {
     gender = gender.trim().toUpperCase();
     const enumGender = AnimalGender[gender];
 
-    const birthDate = new Date(birth_date);
-    const now = new Date(Date.now());
-
-    if (birthDate.getTime() > now.getTime()) {
+    if (moment(birth_date).isSameOrAfter(moment())) {
       throw new Error("Invalid Date");
     }
 
@@ -67,7 +67,7 @@ class CreateAnimalService {
       description,
       kind: enumKind,
       gender: enumGender,
-      birth_date: birthDate,
+      birth_date: moment(birth_date).format("YYYY-MM-DD"),
       available: true,
       images,
     });

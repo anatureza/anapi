@@ -4,6 +4,8 @@ import { classToPlain } from "class-transformer";
 import { UsersRepository } from "../../repositories/UsersRepository";
 import { AddressesRepository } from "../../repositories/AddressesRepository";
 
+import moment from "moment";
+
 interface IUserRequest {
   user_id: string;
   name: string;
@@ -35,25 +37,17 @@ class EditUserService {
       throw new Error("User Not Found");
     }
 
-    const birthDate = new Date(birth_date);
-    const now = new Date(Date.now());
-
-    if (birthDate.getTime() > now.getTime()) {
+    if (moment(birth_date).isSameOrAfter(moment())) {
       throw new Error("Invalid Date");
     }
 
     try {
-      await usersRepository.update(
-        {
-          id: user.id,
-        },
-        {
-          name,
-          phone_number,
-          birth_date: birthDate,
-          authorizes_image,
-        }
-      );
+      await usersRepository.update(user, {
+        name,
+        phone_number,
+        birth_date: moment(birth_date).format("YYYY-MM-DD"),
+        authorizes_image,
+      });
       await addressesRepository.update(
         {
           id: user.address_id,

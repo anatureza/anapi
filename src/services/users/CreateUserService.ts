@@ -6,6 +6,8 @@ import { UsersRepository } from "../../repositories/UsersRepository";
 import { AddressesRepository } from "../../repositories/AddressesRepository";
 import { UserType } from "../../entities/User";
 
+import moment from "moment";
+
 interface IUserRequest {
   name: string;
   email: string;
@@ -60,10 +62,7 @@ class CreateUserService {
     type = type.trim().toUpperCase();
     const enumType = UserType[type];
 
-    const birthDate = new Date(birth_date);
-    const now = new Date(Date.now());
-
-    if (birthDate.getTime() > now.getTime()) {
+    if (moment(birth_date).isSameOrAfter(moment())) {
       throw new Error("Invalid Date");
     }
 
@@ -86,7 +85,7 @@ class CreateUserService {
         address_id: userAddress.id,
         password: passwordHash,
         phone_number,
-        birth_date: birthDate,
+        birth_date: moment(birth_date).format("YYYY-MM-DD"),
         type: enumType,
         authorizes_image,
       });

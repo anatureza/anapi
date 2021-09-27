@@ -7,6 +7,8 @@ import { UsersRepository } from "../../repositories/UsersRepository";
 import { UserType } from "../../entities/User";
 import { AnimalGender, AnimalKind } from "../../entities/Animal";
 
+import moment from "moment";
+
 interface IAnimalRequest {
   id: string;
   volunteer_id: string;
@@ -70,10 +72,7 @@ class EditAnimalService {
     gender = gender.trim().toUpperCase();
     const enumGender = AnimalGender[gender];
 
-    const birthDate = new Date(birth_date);
-    const now = new Date(Date.now());
-
-    if (birthDate.getTime() > now.getTime()) {
+    if (moment(birth_date).isSameOrAfter(moment())) {
       throw new Error("Invalid Date");
     }
 
@@ -85,7 +84,7 @@ class EditAnimalService {
           description,
           kind: enumKind,
           gender: enumGender,
-          birth_date: birthDate,
+          birth_date: moment(birth_date).format("YYYY-MM-DD"),
         }
       );
       await addressesRepository.update(

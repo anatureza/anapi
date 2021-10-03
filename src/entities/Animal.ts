@@ -73,7 +73,7 @@ class Animal {
   })
   gender: AnimalGender;
 
-  @Column()
+  @Column({ type: "date" })
   birth_date: Date;
 
   @CreateDateColumn()

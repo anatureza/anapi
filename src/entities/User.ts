@@ -45,7 +45,7 @@ class User {
   @OneToOne(() => Address, { cascade: ["update", "remove"] })
   address: Address;
 
-  @Column()
+  @Column({ type: "date" })
   birth_date: Date;
 
   @Column({

@@ -62,7 +62,13 @@ class CreateUserService {
     type = type.trim().toUpperCase();
     const enumType = UserType[type];
 
-    if (moment(birth_date).isSameOrAfter(moment())) {
+    const formatBirthDate = moment(birth_date, "YYYY-MM-DD");
+
+    if (!formatBirthDate.isValid()) {
+      throw new Error("Invalid Data Input");
+    }
+
+    if (formatBirthDate.isSameOrAfter(moment())) {
       throw new Error("Invalid Date");
     }
 
@@ -85,7 +91,7 @@ class CreateUserService {
         address_id: userAddress.id,
         password: passwordHash,
         phone_number,
-        birth_date: moment(birth_date).format("YYYY-MM-DD"),
+        birth_date: formatBirthDate.toDate(),
         type: enumType,
         authorizes_image,
       });

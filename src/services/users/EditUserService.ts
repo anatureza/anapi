@@ -10,7 +10,7 @@ interface IUserRequest {
   user_id: string;
   name: string;
   phone_number: string;
-  birth_date: Date;
+  birth_date: string;
   authorizes_image: boolean;
 }
 
@@ -37,17 +37,27 @@ class EditUserService {
       throw new Error("User Not Found");
     }
 
-    if (moment(birth_date).isSameOrAfter(moment())) {
+    const formatBirthDate = moment(birth_date);
+
+    if (!formatBirthDate.isValid()) {
+      throw new Error("Invalid Data Input");
+    }
+
+    if (formatBirthDate.isSameOrAfter(moment(moment(), "YYYY-MM-DD"))) {
       throw new Error("Invalid Date");
     }
 
     try {
-      await usersRepository.update(user, {
-        name,
-        phone_number,
-        birth_date: moment(birth_date).format("YYYY-MM-DD"),
-        authorizes_image,
-      });
+      await usersRepository.update(
+        { id: user_id },
+        {
+          name,
+          phone_number,
+          birth_date: formatBirthDate.toDate(),
+          authorizes_image,
+        }
+      );
+
       await addressesRepository.update(
         {
           id: user.address_id,
@@ -61,14 +71,15 @@ class EditUserService {
           city,
         }
       );
-
-      const updatedUser = await usersRepository.findOne(user_id, {
-        relations: ["address"],
-      });
-      return classToPlain(updatedUser);
     } catch (error) {
       throw new Error(`User Could Not Be Edited (${error})`);
     }
+
+    const updatedUser = await usersRepository.findOne(user_id, {
+      relations: ["address"],
+    });
+
+    return classToPlain(updatedUser);
   }
 }
 

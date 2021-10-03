@@ -50,7 +50,13 @@ class CreateAnimalService {
     gender = gender.trim().toUpperCase();
     const enumGender = AnimalGender[gender];
 
-    if (moment(birth_date).isSameOrAfter(moment())) {
+    const formatBirthDate = moment(birth_date, "YYYY-MM-DD");
+
+    if (!formatBirthDate.isValid()) {
+      throw new Error("Invalid Data Input");
+    }
+
+    if (formatBirthDate.isSameOrAfter(moment())) {
       throw new Error("Invalid Date");
     }
 
@@ -67,7 +73,7 @@ class CreateAnimalService {
       description,
       kind: enumKind,
       gender: enumGender,
-      birth_date: moment(birth_date).format("YYYY-MM-DD"),
+      birth_date: formatBirthDate.toDate(),
       available: true,
       images,
     });

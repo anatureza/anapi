@@ -28,6 +28,8 @@ import { EditAnimalController } from "./controllers/animals/EditAnimalController
 import { DeleteAnimalController } from "./controllers/animals/DeleteAnimalController";
 import { ListAnimalReservationsController } from "./controllers/animals/ListAnimalReservationsController";
 
+import { DeleteAnimalImageController } from "./controllers/animals/DeleteAnimalImageController";
+
 import { CreateReservationController } from "./controllers/reservations/CreateReservationController";
 import { ApproveReservationController } from "./controllers/reservations/ApproveReservationController";
 import { DisapproveReservationController } from "./controllers/reservations/DisapproveReservationController";
@@ -56,20 +58,25 @@ const updateUserAvatarController = new UpdateUserAvatarController();
 const createAnimalController = new CreateAnimalController();
 const showAnimalController = new ShowAnimalController();
 const listAnimalsController = new ListAnimalsController();
-const listAnimalsFromAuthUserController = new ListAnimalsFromAuthUserController();
+const listAnimalsFromAuthUserController =
+  new ListAnimalsFromAuthUserController();
 const listAvailableAnimalsController = new ListAvailableAnimalsController();
 const listUnavailableAnimalsController = new ListUnavailableAnimalsController();
 const editAnimalController = new EditAnimalController();
 const deleteAnimalController = new DeleteAnimalController();
 const listAnimalReservationsController = new ListAnimalReservationsController();
 
+const deleteAnimalImageController = new DeleteAnimalImageController();
+
 const createReservationController = new CreateReservationController();
 const approveReservationController = new ApproveReservationController();
 const disapproveReservationController = new DisapproveReservationController();
 const confirmAdoptionController = new ConfirmAdoptionController();
 const listNewReservationsController = new ListNewReservationsController();
-const listApprovedReservationsController = new ListApprovedReservationsController();
-const listDisapprovedReservationsController = new ListDisapprovedReservationsController();
+const listApprovedReservationsController =
+  new ListApprovedReservationsController();
+const listDisapprovedReservationsController =
+  new ListDisapprovedReservationsController();
 
 const createTaskController = new CreateTaskController();
 const listTasksFromAnimalController = new ListTasksFromAnimalController();
@@ -154,6 +161,12 @@ router.get(
   ensureAuthenticated,
   ensureAtLeastVolunteer,
   listAnimalReservationsController.handle
+);
+router.delete(
+  "/animal/:animal_id/image/:image_id",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  deleteAnimalImageController.handle
 );
 
 router.post(

@@ -7,8 +7,6 @@ class ListAnimalsController {
 
     const animals = await listAnimalsService.execute();
 
-    if (!(animals.length > 0)) return res.json({ message: "No Animals Found" });
-
     return res.json(animals);
   }
 }

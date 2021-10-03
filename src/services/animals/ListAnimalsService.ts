@@ -10,6 +10,10 @@ class ListAnimalsService {
       relations: ["user", "address", "images"],
     });
 
+    if (!animals) {
+      return [];
+    }
+
     return classToPlain(animals);
   }
 }

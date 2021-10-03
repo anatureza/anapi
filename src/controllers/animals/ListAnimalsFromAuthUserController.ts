@@ -11,8 +11,6 @@ class ListAnimalsFromAuthUserController {
       volunteer_id: user_id,
     });
 
-    if (!(animals.length > 0)) return res.json({ message: "No Animals Found" });
-
     return res.json(animals);
   }
 }

@@ -42,6 +42,7 @@ import { CreateTaskController } from "./controllers/tasks/CreateTaskController";
 import { ListTasksFromAnimalController } from "./controllers/tasks/ListTasksFromAnimalController";
 import { EditTaskController } from "./controllers/tasks/EditTaskController";
 import { DeleteTaskController } from "./controllers/tasks/DeleteTaskController";
+import { UploadAnimalImagesController } from "./controllers/animals/UploadAnimalImagesController";
 
 const router = Router();
 
@@ -67,6 +68,7 @@ const deleteAnimalController = new DeleteAnimalController();
 const listAnimalReservationsController = new ListAnimalReservationsController();
 
 const deleteAnimalImageController = new DeleteAnimalImageController();
+const uploadAnimalImagesController = new UploadAnimalImagesController();
 
 const createReservationController = new CreateReservationController();
 const approveReservationController = new ApproveReservationController();
@@ -161,6 +163,13 @@ router.get(
   ensureAuthenticated,
   ensureAtLeastVolunteer,
   listAnimalReservationsController.handle
+);
+router.patch(
+  "/animal/:animal_id/image",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  upload.array("images"),
+  uploadAnimalImagesController.handle
 );
 router.delete(
   "/animal/:animal_id/image/:image_id",

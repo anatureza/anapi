@@ -7,6 +7,7 @@ import { AddressesRepository } from "../../repositories/AddressesRepository";
 import { UserType } from "../../entities/User";
 
 import moment from "moment";
+import { AddressFederativeUnits } from "../../entities/Address";
 
 interface IUserRequest {
   name: string;
@@ -25,6 +26,7 @@ interface IUserAddressRequest {
   neighborhood: string;
   zip: string;
   city: string;
+  uf?: string;
 }
 
 class CreateUserService {
@@ -38,7 +40,15 @@ class CreateUserService {
       type = "user",
       authorizes_image = false,
     }: IUserRequest,
-    { place, number, complement, neighborhood, zip, city }: IUserAddressRequest
+    {
+      place,
+      number,
+      complement,
+      neighborhood,
+      zip,
+      city,
+      uf = "NONE",
+    }: IUserAddressRequest
   ) {
     const usersRepository = getCustomRepository(UsersRepository);
     const addressRepository = getCustomRepository(AddressesRepository);
@@ -72,6 +82,9 @@ class CreateUserService {
       throw new Error("Invalid Date");
     }
 
+    uf = uf.trim().toUpperCase();
+    const enumUF = AddressFederativeUnits[uf];
+
     const passwordHash = await hash(password, 8);
 
     const userAddress = addressRepository.create({
@@ -81,6 +94,7 @@ class CreateUserService {
       neighborhood,
       zip,
       city,
+      uf: enumUF,
     });
     await addressRepository.save(userAddress);
 

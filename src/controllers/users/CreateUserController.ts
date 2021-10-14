@@ -4,7 +4,7 @@ import { CreateUserService } from "../../services/users/CreateUserService";
 class CreateUserController {
   async handle(req: Request, res: Response) {
     // Get Address info
-    const { place, number, complement, neighborhood, zip, city } = req.body;
+    const { place, number, complement, neighborhood, zip, city, uf } = req.body;
     // Get User info
     const {
       name,
@@ -35,6 +35,7 @@ class CreateUserController {
         neighborhood,
         zip,
         city,
+        uf,
       }
     );
 

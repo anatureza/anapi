@@ -9,6 +9,8 @@ import { AnimalGender, AnimalKind } from "../../entities/Animal";
 
 import moment from "moment";
 
+import { AddressFederativeUnits } from "../../entities/Address";
+
 interface IAnimalRequest {
   id: string;
   volunteer_id: string;
@@ -26,6 +28,7 @@ interface IAnimalAddressRequest {
   neighborhood: string;
   zip: string;
   city: string;
+  uf?: string;
 }
 
 class EditAnimalService {
@@ -46,6 +49,7 @@ class EditAnimalService {
       neighborhood,
       zip,
       city,
+      uf = "NONE",
     }: IAnimalAddressRequest
   ) {
     const animalsRepository = getCustomRepository(AnimalsRepository);
@@ -82,6 +86,9 @@ class EditAnimalService {
       throw new Error("Invalid Date");
     }
 
+    uf = uf.trim().toUpperCase();
+    const enumUF = AddressFederativeUnits[uf];
+
     try {
       await animalsRepository.update(
         { id: animal.id },
@@ -102,6 +109,7 @@ class EditAnimalService {
           neighborhood,
           zip,
           city,
+          uf: enumUF,
         }
       );
 

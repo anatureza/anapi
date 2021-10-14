@@ -8,7 +8,7 @@ class EditAnimalController {
     const { id } = req.params;
 
     const { name, description, kind, gender, birth_date } = req.body;
-    const { place, number, complement, neighborhood, zip, city } = req.body;
+    const { place, number, complement, neighborhood, zip, city, uf } = req.body;
 
     const editAnimalService = new EditAnimalService();
 
@@ -29,6 +29,7 @@ class EditAnimalController {
         neighborhood,
         zip,
         city,
+        uf,
       }
     );
     return res.json(updatedAnimal);

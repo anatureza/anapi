@@ -5,6 +5,7 @@ import { UsersRepository } from "../../repositories/UsersRepository";
 import { AddressesRepository } from "../../repositories/AddressesRepository";
 
 import moment from "moment";
+import { AddressFederativeUnits } from "../../entities/Address";
 
 interface IUserRequest {
   user_id: string;
@@ -21,12 +22,21 @@ interface IUserAddressRequest {
   neighborhood: string;
   zip: string;
   city: string;
+  uf?: string;
 }
 
 class EditUserService {
   async execute(
     { user_id, name, phone_number, birth_date, authorizes_image }: IUserRequest,
-    { place, number, complement, neighborhood, zip, city }: IUserAddressRequest
+    {
+      place,
+      number,
+      complement,
+      neighborhood,
+      zip,
+      city,
+      uf = "NONE",
+    }: IUserAddressRequest
   ) {
     const usersRepository = getCustomRepository(UsersRepository);
     const addressesRepository = getCustomRepository(AddressesRepository);
@@ -46,6 +56,9 @@ class EditUserService {
     if (formatBirthDate.isSameOrAfter(moment(moment(), "YYYY-MM-DD"))) {
       throw new Error("Invalid Date");
     }
+
+    uf = uf.trim().toUpperCase();
+    const enumUF = AddressFederativeUnits[uf];
 
     try {
       await usersRepository.update(
@@ -69,6 +82,7 @@ class EditUserService {
           neighborhood,
           zip,
           city,
+          uf: enumUF,
         }
       );
     } catch (error) {

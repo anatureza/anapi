@@ -1,4 +1,5 @@
 import { getCustomRepository } from "typeorm";
+import { AddressFederativeUnits } from "../../entities/Address";
 import { AddressesRepository } from "../../repositories/AddressesRepository";
 
 interface IAddressRequest {
@@ -8,6 +9,7 @@ interface IAddressRequest {
   neighborhood: string;
   zip: string;
   city: string;
+  uf?: string;
 }
 
 class CreateAddressService {
@@ -18,21 +20,30 @@ class CreateAddressService {
     neighborhood,
     zip,
     city,
+    uf = "NONE",
   }: IAddressRequest) {
     const addressesRepository = getCustomRepository(AddressesRepository);
 
-    const address = addressesRepository.create({
-      place,
-      number,
-      complement,
-      neighborhood,
-      zip,
-      city,
-    });
+    uf = uf.trim().toUpperCase();
+    const enumUF = AddressFederativeUnits[uf];
 
-    await addressesRepository.save(address);
+    try {
+      const address = addressesRepository.create({
+        place,
+        number,
+        complement,
+        neighborhood,
+        zip,
+        city,
+        uf: enumUF,
+      });
 
-    return address;
+      await addressesRepository.save(address);
+
+      return address;
+    } catch (error) {
+      throw new Error(`Error during Address Registration! (${error})`);
+    }
   }
 }
 

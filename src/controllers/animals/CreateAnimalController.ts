@@ -5,7 +5,7 @@ import { CreateAnimalService } from "../../services/animals/CreateAnimalService"
 
 class CreateAnimalController {
   async handle(req: Request, res: Response) {
-    const { place, number, complement, neighborhood, zip, city } = req.body;
+    const { place, number, complement, neighborhood, zip, city, uf } = req.body;
 
     const { name, description, kind, gender, birth_date } = req.body;
 
@@ -25,6 +25,7 @@ class CreateAnimalController {
       neighborhood,
       zip,
       city,
+      uf,
     });
 
     const animal = await createAnimalService.execute({

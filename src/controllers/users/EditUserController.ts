@@ -7,7 +7,7 @@ class EditUserController {
 
     const { name, phone_number, birth_date, authorizes_image } = req.body;
 
-    const { place, number, complement, neighborhood, zip, city } = req.body;
+    const { place, number, complement, neighborhood, zip, city, uf } = req.body;
 
     const editUserService = new EditUserService();
 
@@ -26,6 +26,7 @@ class EditUserController {
         neighborhood,
         zip,
         city,
+        uf,
       }
     );
 

@@ -9,7 +9,7 @@ import { AnimalGender, AnimalKind } from "../../entities/Animal";
 
 import moment from "moment";
 
-import { AddressFederativeUnits } from "../../entities/Address";
+import { EditAddressService } from "../addresses/EditAddressService";
 
 interface IAnimalRequest {
   id: string;
@@ -53,8 +53,9 @@ class EditAnimalService {
     }: IAnimalAddressRequest
   ) {
     const animalsRepository = getCustomRepository(AnimalsRepository);
-    const addressesRepository = getCustomRepository(AddressesRepository);
     const usersRepository = getCustomRepository(UsersRepository);
+
+    const editAddressService = new EditAddressService();
 
     const animal = await animalsRepository.findOne(id);
 
@@ -86,9 +87,6 @@ class EditAnimalService {
       throw new Error("Invalid Date");
     }
 
-    uf = uf.trim().toUpperCase();
-    const enumUF = AddressFederativeUnits[uf];
-
     try {
       await animalsRepository.update(
         { id: animal.id },
@@ -100,18 +98,17 @@ class EditAnimalService {
           birth_date: formatBirthDate.toDate(),
         }
       );
-      await addressesRepository.update(
-        { id: animal.address_id },
-        {
-          place,
-          number,
-          complement,
-          neighborhood,
-          zip,
-          city,
-          uf: enumUF,
-        }
-      );
+
+      await editAddressService.execute({
+        id: animal.address_id,
+        place,
+        number,
+        complement,
+        neighborhood,
+        zip,
+        city,
+        uf,
+      });
 
       const updatedAnimal = await animalsRepository.findOne(
         { id: animal.id },

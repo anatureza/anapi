@@ -2,10 +2,10 @@ import { getCustomRepository } from "typeorm";
 import { classToPlain } from "class-transformer";
 
 import { UsersRepository } from "../../repositories/UsersRepository";
-import { AddressesRepository } from "../../repositories/AddressesRepository";
 
 import moment from "moment";
-import { AddressFederativeUnits } from "../../entities/Address";
+
+import { EditAddressService } from "../addresses/EditAddressService";
 
 interface IUserRequest {
   user_id: string;
@@ -39,7 +39,8 @@ class EditUserService {
     }: IUserAddressRequest
   ) {
     const usersRepository = getCustomRepository(UsersRepository);
-    const addressesRepository = getCustomRepository(AddressesRepository);
+
+    const editAddressService = new EditAddressService();
 
     const user = await usersRepository.findOne(user_id);
 
@@ -57,43 +58,43 @@ class EditUserService {
       throw new Error("Invalid Date");
     }
 
-    uf = uf.trim().toUpperCase();
-    const enumUF = AddressFederativeUnits[uf];
+    if (phone_number !== user.phone_number) {
+      const phoneNumberAlreadyExists = await usersRepository.findOne({
+        phone_number,
+      });
+
+      if (phoneNumberAlreadyExists) {
+        throw new Error("Phone number is already in use!");
+      }
+    }
 
     try {
-      await usersRepository.update(
-        { id: user_id },
-        {
-          name,
-          phone_number,
-          birth_date: formatBirthDate.toDate(),
-          authorizes_image,
-        }
-      );
+      await usersRepository.update(user, {
+        name,
+        phone_number,
+        birth_date: formatBirthDate.toDate(),
+        authorizes_image,
+      });
 
-      await addressesRepository.update(
-        {
-          id: user.address_id,
-        },
-        {
-          place,
-          number,
-          complement,
-          neighborhood,
-          zip,
-          city,
-          uf: enumUF,
-        }
-      );
+      await editAddressService.execute({
+        id: user.address_id,
+        place,
+        number,
+        complement,
+        neighborhood,
+        zip,
+        city,
+        uf,
+      });
+
+      const updatedUser = await usersRepository.findOne(user_id, {
+        relations: ["address"],
+      });
+
+      return classToPlain(updatedUser);
     } catch (error) {
       throw new Error(`User Could Not Be Edited (${error})`);
     }
-
-    const updatedUser = await usersRepository.findOne(user_id, {
-      relations: ["address"],
-    });
-
-    return classToPlain(updatedUser);
   }
 }
 

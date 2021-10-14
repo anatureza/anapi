@@ -7,8 +7,9 @@ import { getCustomRepository } from "typeorm";
 
 import { UserType } from "../../entities/User";
 
-import { AddressesRepository } from "../../repositories/AddressesRepository";
 import { UsersRepository } from "../../repositories/UsersRepository";
+
+import { DeleteAddressService } from "../addresses/DeleteAddressService";
 
 interface IUserRequest {
   user_id: string;
@@ -18,7 +19,8 @@ interface IUserRequest {
 class DeleteUserService {
   async execute({ user_id, user_id_params }: IUserRequest) {
     const usersRepository = getCustomRepository(UsersRepository);
-    const addressesRepository = getCustomRepository(AddressesRepository);
+
+    const deleteAddressService = new DeleteAddressService();
 
     const userLoggedIn = await usersRepository.findOne({ id: user_id });
 
@@ -42,7 +44,9 @@ class DeleteUserService {
       }
     }
 
-    const userToBeDeleted = await usersRepository.findOne(userIdToBeDeleted);
+    const userToBeDeleted = await usersRepository.findOne(userIdToBeDeleted, {
+      relations: ["address"],
+    });
 
     try {
       if (userToBeDeleted.avatar) {
@@ -57,6 +61,7 @@ class DeleteUserService {
       }
 
       await usersRepository.remove(userToBeDeleted);
+      await deleteAddressService.execute({ id: userToBeDeleted.address_id });
 
       return { message: `User ${userToBeDeleted.name} deleted` };
     } catch {

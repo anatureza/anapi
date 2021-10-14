@@ -11,6 +11,8 @@ import { AnimalsRepository } from "../../repositories/AnimalsRepository";
 import { ImagesRepository } from "../../repositories/ImagesRepository";
 import { UsersRepository } from "../../repositories/UsersRepository";
 
+import { DeleteAddressService } from "../addresses/DeleteAddressService";
+
 interface IAnimalRequest {
   id: string;
   volunteer_id: string;
@@ -21,6 +23,8 @@ class DeleteAnimalService {
     const animalsRepository = getCustomRepository(AnimalsRepository);
     const imagesRepository = getCustomRepository(ImagesRepository);
     const usersRepository = getCustomRepository(UsersRepository);
+
+    const deleteAddressService = new DeleteAddressService();
 
     const animal = await animalsRepository.findOne(id, {
       relations: ["images"],
@@ -38,25 +42,31 @@ class DeleteAnimalService {
       }
     }
 
-    if (animal.images.length > 0) {
-      const images = await imagesRepository.find({ animal_id: id });
+    try {
+      if (animal.images.length > 0) {
+        const images = await imagesRepository.find({ animal_id: id });
 
-      await Promise.all(
-        images.map(async (image) => {
-          const imageFilePath = path.join(uploadConfig.directory, image.path);
-          const imageFileExists = await fs.promises.stat(imageFilePath);
+        await Promise.all(
+          images.map(async (image) => {
+            const imageFilePath = path.join(uploadConfig.directory, image.path);
+            const imageFileExists = await fs.promises.stat(imageFilePath);
 
-          if (imageFileExists) {
-            await fs.promises.unlink(imageFilePath);
-          }
-        })
-      );
+            if (imageFileExists) {
+              await fs.promises.unlink(imageFilePath);
+            }
+          })
+        );
 
-      await imagesRepository.remove(images);
+        await imagesRepository.remove(images);
+      }
+
+      await animalsRepository.remove(animal);
+      await deleteAddressService.execute({ id: animal.address_id });
+
+      return { message: `Animal ${animal.name} was deleted` };
+    } catch (error) {
+      throw new Error(`Animal Could Not Be Deleted! (${error})`);
     }
-
-    await animalsRepository.remove(animal);
-    return { message: `Animal ${animal.name} was deleted` };
   }
 }
 

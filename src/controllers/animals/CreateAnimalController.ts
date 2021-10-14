@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 
-import { CreateAddressService } from "../../services/addresses/CreateAddressService";
 import { CreateAnimalService } from "../../services/animals/CreateAnimalService";
 
 class CreateAnimalController {
@@ -15,31 +14,30 @@ class CreateAnimalController {
       ? (req.files as Express.Multer.File[])
       : null;
 
-    const createAddressService = new CreateAddressService();
     const createAnimalService = new CreateAnimalService();
 
-    const address = await createAddressService.execute({
-      place,
-      number,
-      complement,
-      neighborhood,
-      zip,
-      city,
-      uf,
-    });
+    const animal = await createAnimalService.execute(
+      {
+        volunteer_id: user_id,
+        name,
+        description,
+        kind,
+        gender,
+        birth_date,
+        requestImages,
+      },
+      {
+        place,
+        number,
+        complement,
+        neighborhood,
+        zip,
+        city,
+        uf,
+      }
+    );
 
-    const animal = await createAnimalService.execute({
-      volunteer_id: user_id,
-      address_id: address.id,
-      name,
-      description,
-      kind,
-      gender,
-      birth_date,
-      requestImages,
-    });
-
-    return res.json({ animal, address });
+    return res.json(animal);
   }
 }
 

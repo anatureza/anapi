@@ -3,11 +3,14 @@ import { classToPlain } from "class-transformer";
 import { hash } from "bcryptjs";
 
 import { UsersRepository } from "../../repositories/UsersRepository";
-import { AddressesRepository } from "../../repositories/AddressesRepository";
 import { UserType } from "../../entities/User";
 
 import moment from "moment";
+
 import { AddressFederativeUnits } from "../../entities/Address";
+
+import { CreateAddressService } from "../addresses/CreateAddressService";
+import { DeleteAddressService } from "../addresses/DeleteAddressService";
 
 interface IUserRequest {
   name: string;
@@ -51,7 +54,9 @@ class CreateUserService {
     }: IUserAddressRequest
   ) {
     const usersRepository = getCustomRepository(UsersRepository);
-    const addressRepository = getCustomRepository(AddressesRepository);
+
+    const createAddressService = new CreateAddressService();
+    const deleteAddressService = new DeleteAddressService();
 
     const emailAlreadyExists = await usersRepository.findOne({
       email,
@@ -82,27 +87,23 @@ class CreateUserService {
       throw new Error("Invalid Date");
     }
 
-    uf = uf.trim().toUpperCase();
-    const enumUF = AddressFederativeUnits[uf];
-
     const passwordHash = await hash(password, 8);
 
-    const userAddress = addressRepository.create({
+    const address = await createAddressService.execute({
       place,
       number,
       complement,
       neighborhood,
       zip,
       city,
-      uf: enumUF,
+      uf,
     });
-    await addressRepository.save(userAddress);
 
     try {
       const user = usersRepository.create({
         name,
         email,
-        address_id: userAddress.id,
+        address_id: address.id,
         password: passwordHash,
         phone_number,
         birth_date: formatBirthDate.toDate(),
@@ -111,9 +112,9 @@ class CreateUserService {
       });
 
       await usersRepository.save(user);
-      return classToPlain([user, userAddress]);
+      return classToPlain([user, address]);
     } catch (error) {
-      await addressRepository.delete({ id: userAddress.id });
+      await deleteAddressService.execute({ id: address.id });
       throw new Error(`User Could Not Be Created (${error})`);
     }
   }

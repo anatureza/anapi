@@ -1,10 +1,11 @@
 import { getCustomRepository } from "typeorm";
 
-import { AddressFederativeUnits } from "../../entities/Address";
-
 import { AddressesRepository } from "../../repositories/AddressesRepository";
 
+import { AddressFederativeUnits } from "../../entities/Address";
+
 interface IAddressRequest {
+  id: string;
   place: string;
   number: string;
   complement: string;
@@ -14,8 +15,9 @@ interface IAddressRequest {
   uf?: string;
 }
 
-class CreateAddressService {
+class EditAddressService {
   async execute({
+    id,
     place,
     number,
     complement,
@@ -26,11 +28,17 @@ class CreateAddressService {
   }: IAddressRequest) {
     const addressesRepository = getCustomRepository(AddressesRepository);
 
+    const address = await addressesRepository.findOne({ id });
+
+    if (!address) {
+      throw new Error("Address Not Found");
+    }
+
     uf = uf.trim().toUpperCase();
     const enumUF = AddressFederativeUnits[uf];
 
     try {
-      const address = addressesRepository.create({
+      await addressesRepository.update(address, {
         place,
         number,
         complement,
@@ -40,13 +48,13 @@ class CreateAddressService {
         uf: enumUF,
       });
 
-      await addressesRepository.save(address);
+      const updatedAddress = await addressesRepository.findOne({ id });
 
-      return address;
+      return updatedAddress;
     } catch (error) {
-      throw new Error(`Error during Address Registration! (${error})`);
+      throw new Error(`Address Could Not Be Edited (${error})`);
     }
   }
 }
 
-export { CreateAddressService };
+export { EditAddressService };

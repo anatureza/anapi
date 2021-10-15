@@ -34,19 +34,26 @@ class EditAddressService {
       throw new Error("Address Not Found");
     }
 
+    if (uf === "") {
+      uf = "none";
+    }
+
     uf = uf.trim().toUpperCase();
     const enumUF = AddressFederativeUnits[uf];
 
     try {
-      await addressesRepository.update(address, {
-        place,
-        number,
-        complement,
-        neighborhood,
-        zip,
-        city,
-        uf: enumUF,
-      });
+      await addressesRepository.update(
+        { id },
+        {
+          place,
+          number,
+          complement,
+          neighborhood,
+          zip,
+          city,
+          uf: enumUF,
+        }
+      );
 
       const updatedAddress = await addressesRepository.findOne({ id });
 

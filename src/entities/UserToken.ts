@@ -16,7 +16,7 @@ class UserToken {
   @PrimaryColumn({ type: "uuid" })
   readonly id: string;
 
-  @Column({ type: "uuid" })
+  @Column({ type: "uuid", unique: true })
   token: string;
 
   @Column({ type: "uuid" })

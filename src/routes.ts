@@ -18,6 +18,9 @@ import { UpdateUserAvatarController } from "./controllers/users/UpdateUserAvatar
 
 import { AuthenticateUserController } from "./controllers/auth/AuthenticateUserController";
 
+import { SendForgotPasswordEmailController } from "./controllers/users/SendForgotPasswordEmailController";
+import { ResetPasswordController } from "./controllers/users/ResetPasswordController";
+
 import { CreateAnimalController } from "./controllers/animals/CreateAnimalController";
 import { ShowAnimalController } from "./controllers/animals/ShowAnimalController";
 import { ListAnimalsController } from "./controllers/animals/ListAnimalsController";
@@ -55,6 +58,10 @@ const deleteSpecificUserController = new DeleteSpecificUserController();
 const listAllUsersController = new ListAllUsersController();
 
 const updateUserAvatarController = new UpdateUserAvatarController();
+
+const sendForgotPasswordEmailController =
+  new SendForgotPasswordEmailController();
+const resetPasswordController = new ResetPasswordController();
 
 const createAnimalController = new CreateAnimalController();
 const showAnimalController = new ShowAnimalController();
@@ -118,6 +125,8 @@ router.patch(
   upload.single("avatar"),
   updateUserAvatarController.handle
 );
+router.post("/password/forgot", sendForgotPasswordEmailController.handle);
+router.post("/password/reset", resetPasswordController.handle);
 
 router.post(
   "/animal",

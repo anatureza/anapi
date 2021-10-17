@@ -7,8 +7,6 @@ import { UserType } from "../../entities/User";
 
 import moment from "moment";
 
-import { AddressFederativeUnits } from "../../entities/Address";
-
 import { CreateAddressService } from "../addresses/CreateAddressService";
 import { DeleteAddressService } from "../addresses/DeleteAddressService";
 

@@ -3,9 +3,9 @@ import { classToPlain } from "class-transformer";
 
 import { UsersRepository } from "../../repositories/UsersRepository";
 
-import moment from "moment";
-
 import { EditAddressService } from "../addresses/EditAddressService";
+
+import { checkBirthDate } from "../../utils/verifyDate";
 
 interface IUserRequest {
   user_id: string;
@@ -48,15 +48,7 @@ class EditUserService {
       throw new Error("User Not Found");
     }
 
-    const formatBirthDate = moment(birth_date);
-
-    if (!formatBirthDate.isValid()) {
-      throw new Error("Invalid Data Input");
-    }
-
-    if (formatBirthDate.isSameOrAfter(moment(moment(), "YYYY-MM-DD"))) {
-      throw new Error("Invalid Date");
-    }
+    const formatBirthDate = checkBirthDate({ birth_date });
 
     if (phone_number !== user.phone_number) {
       const phoneNumberAlreadyExists = await usersRepository.findOne({
@@ -72,7 +64,7 @@ class EditUserService {
       await usersRepository.update(user, {
         name,
         phone_number,
-        birth_date: formatBirthDate.toDate(),
+        birth_date: formatBirthDate,
         authorizes_image,
       });
 

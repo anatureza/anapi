@@ -1,10 +1,9 @@
 import { getCustomRepository } from "typeorm";
+import { hash } from "bcryptjs";
+import { addHours, isAfter } from "date-fns";
 
 import { UsersRepository } from "../../repositories/UsersRepository";
 import { UserTokensRepository } from "../../repositories/UserTokensRepository";
-
-import moment from "moment";
-import { hash } from "bcryptjs";
 
 interface IResetPassword {
   token: string;
@@ -28,12 +27,11 @@ class ResetPasswordService {
       throw new Error("User Does Not Exist!");
     }
 
-    const tokenCreatedAt = moment(userToken.created_at);
+    const tokenCreatedAt = userToken.created_at;
+    const compareDate = addHours(tokenCreatedAt, 2);
 
-    const compareDate = tokenCreatedAt.add("2", "h");
-
-    if (compareDate.isAfter(moment())) {
-      throw new Error("Token Expired!");
+    if (isAfter(Date.now(), compareDate)) {
+      throw new Error("Token expired!");
     }
 
     const passwordHash = await hash(password, 8);

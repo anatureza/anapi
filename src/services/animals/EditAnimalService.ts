@@ -1,15 +1,15 @@
 import { getCustomRepository } from "typeorm";
+import { isAfter, isSameDay, isValid } from "date-fns";
 
 import { AnimalsRepository } from "../../repositories/AnimalsRepository";
-import { AddressesRepository } from "../../repositories/AddressesRepository";
 import { UsersRepository } from "../../repositories/UsersRepository";
 
 import { UserType } from "../../entities/User";
 import { AnimalGender, AnimalKind } from "../../entities/Animal";
 
-import moment from "moment";
-
 import { EditAddressService } from "../addresses/EditAddressService";
+
+import { checkBirthDate } from "../../utils/verifyDate";
 
 interface IAnimalRequest {
   id: string;
@@ -18,7 +18,7 @@ interface IAnimalRequest {
   description: string;
   kind?: string;
   gender?: string;
-  birth_date: Date;
+  birth_date: string;
 }
 
 interface IAnimalAddressRequest {
@@ -77,15 +77,7 @@ class EditAnimalService {
     gender = gender.trim().toUpperCase();
     const enumGender = AnimalGender[gender];
 
-    const formatBirthDate = moment(birth_date, "YYYY-MM-DD");
-
-    if (!formatBirthDate.isValid()) {
-      throw new Error("Invalid Data Input");
-    }
-
-    if (formatBirthDate.isSameOrAfter(moment())) {
-      throw new Error("Invalid Date");
-    }
+    const formatBirthDate = checkBirthDate({ birth_date });
 
     try {
       await animalsRepository.update(
@@ -95,7 +87,7 @@ class EditAnimalService {
           description,
           kind: enumKind,
           gender: enumGender,
-          birth_date: formatBirthDate.toDate(),
+          birth_date: formatBirthDate,
         }
       );
 

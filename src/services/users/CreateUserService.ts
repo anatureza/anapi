@@ -5,17 +5,17 @@ import { hash } from "bcryptjs";
 import { UsersRepository } from "../../repositories/UsersRepository";
 import { UserType } from "../../entities/User";
 
-import moment from "moment";
-
 import { CreateAddressService } from "../addresses/CreateAddressService";
 import { DeleteAddressService } from "../addresses/DeleteAddressService";
+
+import { checkBirthDate } from "../../utils/verifyDate";
 
 interface IUserRequest {
   name: string;
   email: string;
   password: string;
   phone_number: string;
-  birth_date: Date;
+  birth_date: string;
   type?: string;
   authorizes_image?: boolean;
 }
@@ -75,15 +75,7 @@ class CreateUserService {
     type = type.trim().toUpperCase();
     const enumType = UserType[type];
 
-    const formatBirthDate = moment(birth_date, "YYYY-MM-DD");
-
-    if (!formatBirthDate.isValid()) {
-      throw new Error("Invalid Data Input");
-    }
-
-    if (formatBirthDate.isSameOrAfter(moment())) {
-      throw new Error("Invalid Date");
-    }
+    const formatBirthDate = checkBirthDate({ birth_date });
 
     const passwordHash = await hash(password, 8);
 
@@ -104,7 +96,7 @@ class CreateUserService {
         address_id: address.id,
         password: passwordHash,
         phone_number,
-        birth_date: formatBirthDate.toDate(),
+        birth_date: formatBirthDate,
         type: enumType,
         authorizes_image,
       });

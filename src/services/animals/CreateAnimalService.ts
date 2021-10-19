@@ -5,10 +5,10 @@ import { AnimalGender, AnimalKind } from "../../entities/Animal";
 import { AnimalsRepository } from "../../repositories/AnimalsRepository";
 import { UsersRepository } from "../../repositories/UsersRepository";
 
-import moment from "moment";
-
 import { CreateAddressService } from "../addresses/CreateAddressService";
 import { DeleteAddressService } from "../addresses/DeleteAddressService";
+
+import { checkBirthDate } from "../../utils/verifyDate";
 
 interface IAnimalRequest {
   volunteer_id: string;
@@ -16,7 +16,7 @@ interface IAnimalRequest {
   description: string;
   kind?: string;
   gender?: string;
-  birth_date: Date;
+  birth_date: string;
   requestImages?: Express.Multer.File[];
 }
 
@@ -69,15 +69,7 @@ class CreateAnimalService {
     gender = gender.trim().toUpperCase();
     const enumGender = AnimalGender[gender];
 
-    const formatBirthDate = moment(birth_date, "YYYY-MM-DD");
-
-    if (!formatBirthDate.isValid()) {
-      throw new Error("Invalid Data Input");
-    }
-
-    if (formatBirthDate.isSameOrAfter(moment())) {
-      throw new Error("Invalid Date");
-    }
+    const formatBirthDate = checkBirthDate({ birth_date });
 
     const images = requestImages
       ? requestImages.map((image) => {
@@ -85,34 +77,38 @@ class CreateAnimalService {
         })
       : null;
 
-    const address = await createAddressService.execute({
-      place,
-      number,
-      complement,
-      neighborhood,
-      zip,
-      city,
-      uf,
-    });
-
     try {
-      const animal = animalsRepository.create({
-        volunteer_id,
-        address_id: address.id,
-        name,
-        description,
-        kind: enumKind,
-        gender: enumGender,
-        birth_date: formatBirthDate.toDate(),
-        available: true,
-        images,
+      const address = await createAddressService.execute({
+        place,
+        number,
+        complement,
+        neighborhood,
+        zip,
+        city,
+        uf,
       });
 
-      await animalsRepository.save(animal);
+      try {
+        const animal = animalsRepository.create({
+          volunteer_id,
+          address_id: address.id,
+          name,
+          description,
+          kind: enumKind,
+          gender: enumGender,
+          birth_date: formatBirthDate,
+          available: true,
+          images,
+        });
 
-      return animal;
+        await animalsRepository.save(animal);
+
+        return animal;
+      } catch (error) {
+        await deleteAddressService.execute({ id: address.id });
+        throw new Error(`Animal Could Not Be Created! (${error})`);
+      }
     } catch (error) {
-      await deleteAddressService.execute({ id: address.id });
       throw new Error(`Animal Could Not Be Created! (${error})`);
     }
   }

@@ -1,13 +1,14 @@
 import path from "path";
 import fs from "fs";
 
-import uploadConfig from "../../config/upload";
-
 import { getCustomRepository } from "typeorm";
+
+import uploadConfig from "../../config/upload";
 
 import { UserType } from "../../entities/User";
 
 import { UsersRepository } from "../../repositories/UsersRepository";
+import { UserTokensRepository } from "../../repositories/UserTokensRepository";
 
 import { DeleteAddressService } from "../addresses/DeleteAddressService";
 
@@ -19,7 +20,7 @@ interface IUserRequest {
 class DeleteUserService {
   async execute({ user_id, user_id_params }: IUserRequest) {
     const usersRepository = getCustomRepository(UsersRepository);
-
+    const userTokensRepository = getCustomRepository(UserTokensRepository);
     const deleteAddressService = new DeleteAddressService();
 
     const userLoggedIn = await usersRepository.findOne({ id: user_id });
@@ -60,12 +61,19 @@ class DeleteUserService {
         }
       }
 
+      const userTokens = await userTokensRepository.find({
+        user_id: userToBeDeleted.id,
+      });
+      if (userTokens) {
+        await userTokensRepository.remove(userTokens);
+      }
+
       await usersRepository.remove(userToBeDeleted);
       await deleteAddressService.execute({ id: userToBeDeleted.address_id });
 
       return { message: `User ${userToBeDeleted.name} deleted` };
-    } catch {
-      throw new Error("User Could Not Be Deleted");
+    } catch (error) {
+      throw new Error(`User Could Not Be Deleted! (${error})`);
     }
   }
 }

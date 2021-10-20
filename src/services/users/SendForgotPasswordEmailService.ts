@@ -1,3 +1,5 @@
+import path from "path";
+
 import { getCustomRepository } from "typeorm";
 
 import { UsersRepository } from "../../repositories/UsersRepository";
@@ -21,11 +23,32 @@ class SendForgotPasswordEmailService {
     }
 
     try {
-      const token = await userTokensRepository.generate({ user_id: user.id });
+      const tokenEntity = await userTokensRepository.generate({
+        user_id: user.id,
+      });
+      const token = tokenEntity.token;
+
+      const forgotPasswordTemplate = path.resolve(
+        __dirname,
+        "..",
+        "..",
+        "views",
+        "forgot_password.hbs"
+      );
 
       await EtherealMail.sendMail({
-        to: email,
-        body: `Solicitação de redefinição de senha recebida, token: ${token.token}`,
+        to: {
+          name: user.name,
+          email: user.email,
+        },
+        subject: "Recuperação de senha",
+        templateData: {
+          file: forgotPasswordTemplate,
+          variables: {
+            name: user.name,
+            link: `${process.env.APP_EXTERNAL_URL}/reset-password?token=${token}`,
+          },
+        },
       });
     } catch {
       throw new Error("Email Could Not Be Sent!");

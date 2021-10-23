@@ -4,8 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node build/server.js",
     "dev": "ts-node-dev src/server.ts",
-    "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js"
+    "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
+    "build": "tsc",
+    "postinstall": "npm run build"
   },
   "repository": "git+https://github.com/anatureza/anapi.git",
   "author": "gusgalote",

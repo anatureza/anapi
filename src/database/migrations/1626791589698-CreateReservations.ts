@@ -25,7 +25,7 @@ export class CreateReservations1626791589698 implements MigrationInterface {
           },
           {
             name: "scheduled_at",
-            type: "date",
+            type: "timestamp",
             isNullable: true,
           },
           {

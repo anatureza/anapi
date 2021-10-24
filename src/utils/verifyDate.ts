@@ -4,6 +4,8 @@ interface ICheckBirthDate {
   birth_date: string;
 }
 
+type CheckScheduledAtTimestamp = string[];
+
 function checkBirthDate({ birth_date }: ICheckBirthDate) {
   const birthDate = add(new Date(birth_date), { days: 1 });
 
@@ -20,4 +22,29 @@ function checkBirthDate({ birth_date }: ICheckBirthDate) {
   return formatBirthDate;
 }
 
-export { checkBirthDate };
+function checkScheduledAtFromAnimalTimestamp(
+  scheduledAtString: string,
+  dates: CheckScheduledAtTimestamp
+) {
+  const scheduledAt = new Date(scheduledAtString);
+
+  if (!isValid(scheduledAt)) {
+    throw new Error("Invalid Data Input");
+  }
+
+  const newDates = dates.filter((date) => {
+    if (!isAfter(scheduledAt, new Date(date))) {
+      return true;
+    }
+  });
+
+  if (newDates.length > 0) {
+    if (typeof newDates !== "undefined") {
+      throw new Error("Invalid Date");
+    }
+  }
+
+  return format(scheduledAt, "yyyy-MM-dd kk:mm:ss");
+}
+
+export { checkBirthDate, checkScheduledAtFromAnimalTimestamp };

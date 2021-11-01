@@ -153,6 +153,12 @@ router.post(
   ensureAuthenticated,
   new CreateReservationController().handle
 );
+router.get(
+  "/reservation/:reservation_id",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  new ShowReservationController().handle
+);
 router.post(
   "/reservation/approve/:reservation_id",
   ensureAuthenticated,

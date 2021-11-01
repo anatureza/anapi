@@ -32,14 +32,14 @@ function checkScheduledAtFromAnimalTimestamp(
     throw new Error("Invalid Data Input");
   }
 
-  const newDates = dates.filter((date) => {
+  const validDates = dates.filter((date) => {
     if (!isAfter(scheduledAt, new Date(date))) {
       return true;
     }
   });
 
-  if (newDates.length > 0) {
-    if (typeof newDates !== "undefined") {
+  if (typeof validDates !== "undefined") {
+    if (validDates.length > 0) {
       throw new Error("Invalid Date");
     }
   }

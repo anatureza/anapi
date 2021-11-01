@@ -1,4 +1,4 @@
-import { getCustomRepository } from "typeorm";
+import { getCustomRepository, Not } from "typeorm";
 import { format } from "date-fns";
 
 import { ReservationStatus } from "../../entities/Reservation";
@@ -46,27 +46,25 @@ class ApproveReservationService {
       "yyyy-MM-dd kk:mm:ss"
     );
 
-    const reservationsFromAnimal = await reservationsRepository.find({
-      animal_id: reservation.animal_id,
+    const otherReservationsFromAnimal = await reservationsRepository.find({
+      where: {
+        id: Not(reservation_id),
+        animal_id: reservation.animal_id,
+        scheduled_at: Not(null),
+      },
     });
 
-    const otherReservations = reservationsFromAnimal.filter(
-      (otherReservation) => otherReservation.id !== reservation_id
-    );
-
-    if (otherReservations) {
-      const reservationsDates = otherReservations.map((otherReservation) => {
-        if (otherReservation.scheduled_at) {
+    if (otherReservationsFromAnimal) {
+      const datesToCompare = otherReservationsFromAnimal.map(
+        (otherReservation) => {
           return otherReservation.scheduled_at.toString();
         }
-      });
+      );
 
-      if (reservationsDates.length > 0) {
-        formatScheduledAt = checkScheduledAtFromAnimalTimestamp(
-          scheduled_at,
-          reservationsDates
-        );
-      }
+      formatScheduledAt = checkScheduledAtFromAnimalTimestamp(
+        scheduled_at,
+        datesToCompare
+      );
     }
 
     try {

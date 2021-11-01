@@ -53,11 +53,14 @@ class ConfirmAdoptionService {
         where: { id: Not(reservation_id), animal_id: reservation.animal_id },
       });
       try {
-        reservationsToBeDisapproved.forEach((reservation) => {
-          reservationsRepository.update(reservation, {
-            status: ReservationStatus.DISAPPROVED,
-          });
-        });
+        const reservationsDisapproved = reservationsToBeDisapproved.map(
+          (reservationTBD) => {
+            reservationTBD.status = ReservationStatus.DISAPPROVED;
+            return reservationTBD;
+          }
+        );
+
+        await reservationsRepository.save(reservationsDisapproved);
       } catch (error) {
         throw new Error(`Could Not Update Other Reservations! (${error})`);
       }

@@ -61,12 +61,15 @@ class EditUserService {
     }
 
     try {
-      await usersRepository.update(user, {
-        name,
-        phone_number,
-        birth_date: formatBirthDate,
-        authorizes_image,
-      });
+      await usersRepository.update(
+        { id: user.id },
+        {
+          name,
+          phone_number,
+          birth_date: formatBirthDate,
+          authorizes_image,
+        }
+      );
 
       await editAddressService.execute({
         id: user.address_id,

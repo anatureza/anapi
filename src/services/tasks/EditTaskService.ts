@@ -42,13 +42,16 @@ class EditTaskService {
     const done_at = done ? new Date(Date.now()) : "";
 
     try {
-      await tasksRepository.update(task_id, {
-        title,
-        description,
-        expected_at,
-        done,
-        done_at,
-      });
+      await tasksRepository.update(
+        { id: task_id },
+        {
+          title,
+          description,
+          expected_at,
+          done,
+          done_at,
+        }
+      );
 
       const updatedTask = await tasksRepository.findOne(task_id);
 

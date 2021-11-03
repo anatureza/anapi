@@ -32,6 +32,7 @@ import { DeleteAnimalController } from "./controllers/animals/DeleteAnimalContro
 import { ListAnimalReservationsController } from "./controllers/animals/ListAnimalReservationsController";
 
 import { DeleteAnimalImageController } from "./controllers/animals/DeleteAnimalImageController";
+import { UploadAnimalImagesController } from "./controllers/animals/UploadAnimalImagesController";
 
 import { CreateReservationController } from "./controllers/reservations/CreateReservationController";
 import { ApproveReservationController } from "./controllers/reservations/ApproveReservationController";
@@ -41,12 +42,12 @@ import { ListNewReservationsController } from "./controllers/reservations/ListNe
 import { ListApprovedReservationsController } from "./controllers/reservations/ListApprovedReservationsController";
 import { ListDisapprovedReservationsController } from "./controllers/reservations/ListDisapprovedReservationsController";
 import { ShowReservationController } from "./controllers/reservations/ShowReservationController";
+import { ShowAdoptedReservationFromAnimalIdController } from "./controllers/reservations/ShowAdoptedReservationFromAnimalIdController";
 
 import { CreateTaskController } from "./controllers/tasks/CreateTaskController";
 import { ListTasksFromAnimalController } from "./controllers/tasks/ListTasksFromAnimalController";
 import { EditTaskController } from "./controllers/tasks/EditTaskController";
 import { DeleteTaskController } from "./controllers/tasks/DeleteTaskController";
-import { UploadAnimalImagesController } from "./controllers/animals/UploadAnimalImagesController";
 
 const router = Router();
 
@@ -194,6 +195,12 @@ router.get(
   ensureAuthenticated,
   ensureAtLeastVolunteer,
   new ListDisapprovedReservationsController().handle
+);
+router.get(
+  "/reservation/adopted/:animal_id",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  new ShowAdoptedReservationFromAnimalIdController().handle
 );
 
 router.post(

@@ -15,7 +15,14 @@ class ShowReservationService {
 
     const reservation = await reservationsRepository.findOne({
       where: { id: reservation_id },
-      relations: ["quiz", "userAdopter", "animal"],
+      relations: [
+        "quiz",
+        "userAdopter",
+        "userAdopter.address",
+        "animal",
+        "animal.user",
+        "animal.images",
+      ],
     });
 
     if (!reservation) {

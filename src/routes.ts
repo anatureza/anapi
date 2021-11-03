@@ -32,6 +32,7 @@ import { DeleteAnimalController } from "./controllers/animals/DeleteAnimalContro
 import { ListAnimalReservationsController } from "./controllers/animals/ListAnimalReservationsController";
 
 import { DeleteAnimalImageController } from "./controllers/animals/DeleteAnimalImageController";
+import { UploadAnimalImagesController } from "./controllers/animals/UploadAnimalImagesController";
 
 import { CreateReservationController } from "./controllers/reservations/CreateReservationController";
 import { ApproveReservationController } from "./controllers/reservations/ApproveReservationController";
@@ -40,218 +41,191 @@ import { ConfirmAdoptionController } from "./controllers/reservations/ConfirmAdo
 import { ListNewReservationsController } from "./controllers/reservations/ListNewReservationsController";
 import { ListApprovedReservationsController } from "./controllers/reservations/ListApprovedReservationsController";
 import { ListDisapprovedReservationsController } from "./controllers/reservations/ListDisapprovedReservationsController";
+import { ShowReservationController } from "./controllers/reservations/ShowReservationController";
+import { ShowAdoptedReservationFromAnimalIdController } from "./controllers/reservations/ShowAdoptedReservationFromAnimalIdController";
 
 import { CreateTaskController } from "./controllers/tasks/CreateTaskController";
 import { ListTasksFromAnimalController } from "./controllers/tasks/ListTasksFromAnimalController";
 import { EditTaskController } from "./controllers/tasks/EditTaskController";
 import { DeleteTaskController } from "./controllers/tasks/DeleteTaskController";
-import { UploadAnimalImagesController } from "./controllers/animals/UploadAnimalImagesController";
 
 const router = Router();
 
-const authenticateUser = new AuthenticateUserController();
-const createUserController = new CreateUserController();
-const showAuthenticatedUserController = new ShowAuthenticatedUserController();
-const editUserController = new EditUserController();
-const deleteUserController = new DeleteUserController();
-const deleteSpecificUserController = new DeleteSpecificUserController();
-const listAllUsersController = new ListAllUsersController();
-
-const updateUserAvatarController = new UpdateUserAvatarController();
-
-const sendForgotPasswordEmailController =
-  new SendForgotPasswordEmailController();
-const resetPasswordController = new ResetPasswordController();
-
-const createAnimalController = new CreateAnimalController();
-const showAnimalController = new ShowAnimalController();
-const listAnimalsController = new ListAnimalsController();
-const listAnimalsFromAuthUserController =
-  new ListAnimalsFromAuthUserController();
-const listAvailableAnimalsController = new ListAvailableAnimalsController();
-const listUnavailableAnimalsController = new ListUnavailableAnimalsController();
-const editAnimalController = new EditAnimalController();
-const deleteAnimalController = new DeleteAnimalController();
-const listAnimalReservationsController = new ListAnimalReservationsController();
-
-const deleteAnimalImageController = new DeleteAnimalImageController();
-const uploadAnimalImagesController = new UploadAnimalImagesController();
-
-const createReservationController = new CreateReservationController();
-const approveReservationController = new ApproveReservationController();
-const disapproveReservationController = new DisapproveReservationController();
-const confirmAdoptionController = new ConfirmAdoptionController();
-const listNewReservationsController = new ListNewReservationsController();
-const listApprovedReservationsController =
-  new ListApprovedReservationsController();
-const listDisapprovedReservationsController =
-  new ListDisapprovedReservationsController();
-
-const createTaskController = new CreateTaskController();
-const listTasksFromAnimalController = new ListTasksFromAnimalController();
-const editTaskController = new EditTaskController();
-const deleteTaskController = new DeleteTaskController();
-
-router.post("/login", authenticateUser.handle);
-router.post("/user", createUserController.handle);
+router.post("/login", new AuthenticateUserController().handle);
+router.post("/user", new CreateUserController().handle);
 router.get(
   "/user",
   ensureAuthenticated,
-  showAuthenticatedUserController.handle
+  new ShowAuthenticatedUserController().handle
 );
 router.get(
   "/user/:userId",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  showAuthenticatedUserController.handle
+  new ShowAuthenticatedUserController().handle
 );
-router.put("/user", ensureAuthenticated, editUserController.handle);
-router.delete("/user", ensureAuthenticated, deleteUserController.handle);
+router.put("/user", ensureAuthenticated, new EditUserController().handle);
+router.delete("/user", ensureAuthenticated, new DeleteUserController().handle);
 router.delete(
   "/user/:id",
   ensureAuthenticated,
   ensureAdmin,
-  deleteSpecificUserController.handle
+  new DeleteSpecificUserController().handle
 );
 router.get(
   "/users",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  listAllUsersController.handle
+  new ListAllUsersController().handle
 );
 router.patch(
   "/user/avatar",
   ensureAuthenticated,
   upload.single("avatar"),
-  updateUserAvatarController.handle
+  new UpdateUserAvatarController().handle
 );
-router.post("/password/forgot", sendForgotPasswordEmailController.handle);
-router.post("/password/reset", resetPasswordController.handle);
+router.post(
+  "/user/password/forgot",
+  new SendForgotPasswordEmailController().handle
+);
+router.post("/user/password/reset", new ResetPasswordController().handle);
 
 router.post(
   "/animal",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
   upload.array("images"),
-  createAnimalController.handle
+  new CreateAnimalController().handle
 );
-router.get("/animal/:id", showAnimalController.handle);
+router.get("/animal/:id", new ShowAnimalController().handle);
 router.get(
   "/animals",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  listAnimalsFromAuthUserController.handle
+  new ListAnimalsFromAuthUserController().handle
 );
 router.get(
   "/animals/available",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  listAvailableAnimalsController.handle
+  new ListAvailableAnimalsController().handle
 );
 router.get(
   "/animals/unavailable",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  listUnavailableAnimalsController.handle
+  new ListUnavailableAnimalsController().handle
 );
-router.get("/all-animals", listAnimalsController.handle);
+router.get("/all-animals", new ListAnimalsController().handle);
 router.put(
   "/animal/:id",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  editAnimalController.handle
+  new EditAnimalController().handle
 );
 router.delete(
   "/animal/:id",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  deleteAnimalController.handle
+  new DeleteAnimalController().handle
 );
 router.get(
   "/animal/reservations/:animal_id",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  listAnimalReservationsController.handle
+  new ListAnimalReservationsController().handle
 );
 router.patch(
   "/animal/:animal_id/image",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
   upload.array("images"),
-  uploadAnimalImagesController.handle
+  new UploadAnimalImagesController().handle
 );
 router.delete(
   "/animal/:animal_id/image/:image_id",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  deleteAnimalImageController.handle
+  new DeleteAnimalImageController().handle
 );
 
 router.post(
   "/reservation/:animal_id",
   ensureAuthenticated,
-  createReservationController.handle
+  new CreateReservationController().handle
+);
+router.get(
+  "/reservation/:reservation_id",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  new ShowReservationController().handle
 );
 router.post(
   "/reservation/approve/:reservation_id",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  approveReservationController.handle
+  new ApproveReservationController().handle
 );
 router.post(
   "/reservation/disapprove/:reservation_id",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  disapproveReservationController.handle
+  new DisapproveReservationController().handle
 );
 router.post(
   "/reservation/adopt/:reservation_id",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  confirmAdoptionController.handle
+  new ConfirmAdoptionController().handle
 );
 router.get(
   "/reservations/new",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  listNewReservationsController.handle
+  new ListNewReservationsController().handle
 );
 router.get(
   "/reservations/approved",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  listApprovedReservationsController.handle
+  new ListApprovedReservationsController().handle
 );
 router.get(
   "/reservations/disapproved",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  listDisapprovedReservationsController.handle
+  new ListDisapprovedReservationsController().handle
+);
+router.get(
+  "/reservation/adopted/:animal_id",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  new ShowAdoptedReservationFromAnimalIdController().handle
 );
 
 router.post(
   "/task/:animal_id",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  createTaskController.handle
+  new CreateTaskController().handle
 );
 router.get(
   "/tasks/:animal_id",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  listTasksFromAnimalController.handle
+  new ListTasksFromAnimalController().handle
 );
 router.put(
   "/task/:task_id",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  editTaskController.handle
+  new EditTaskController().handle
 );
 router.delete(
   "/task/:task_id",
   ensureAuthenticated,
   ensureAtLeastVolunteer,
-  deleteTaskController.handle
+  new DeleteTaskController().handle
 );
 
 export { router };

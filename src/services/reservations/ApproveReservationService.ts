@@ -1,8 +1,12 @@
-import { getCustomRepository } from "typeorm";
+import { getCustomRepository, Not } from "typeorm";
+import { format } from "date-fns";
+
 import { ReservationStatus } from "../../entities/Reservation";
 import { UserType } from "../../entities/User";
 import { ReservationsRepository } from "../../repositories/ReservationsRepository";
 import { UsersRepository } from "../../repositories/UsersRepository";
+
+import { checkScheduledAtFromAnimalTimestamp } from "../../utils/verifyDate";
 
 interface IReservationRequest {
   reservation_id: string;
@@ -37,14 +41,38 @@ class ApproveReservationService {
       }
     }
 
+    let formatScheduledAt = format(
+      new Date(scheduled_at),
+      "yyyy-MM-dd kk:mm:ss"
+    );
+
+    const otherReservationsFromAnimal = await reservationsRepository.find({
+      where: {
+        id: Not(reservation_id),
+        animal_id: reservation.animal_id,
+        scheduled_at: Not(null),
+      },
+    });
+
+    if (otherReservationsFromAnimal) {
+      const datesToCompare = otherReservationsFromAnimal.map(
+        (otherReservation) => {
+          return otherReservation.scheduled_at.toString();
+        }
+      );
+
+      formatScheduledAt = checkScheduledAtFromAnimalTimestamp(
+        scheduled_at,
+        datesToCompare
+      );
+    }
+
     try {
-      // TODO: Verify other reservations from animal
-      // *There cannot be a new approved reservation scheduled_date before another
       await reservationsRepository.update(
         { id: reservation_id },
         {
           status: ReservationStatus.APPROVED,
-          scheduled_at,
+          scheduled_at: formatScheduledAt,
         }
       );
 

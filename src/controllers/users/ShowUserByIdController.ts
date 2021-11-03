@@ -7,14 +7,20 @@ class ShowAuthenticatedUserController {
 
     const { userId } = req.params;
 
-    if (!userId) {
-      const { user_id } = req;
-      const user = await showAuthenticatedUserService.execute({ id: user_id });
-      return res.json(user);
-    }
+    try {
+      if (!userId) {
+        const { user_id } = req;
+        const user = await showAuthenticatedUserService.execute({
+          id: user_id,
+        });
+        return res.json(user);
+      }
 
-    const user = await showAuthenticatedUserService.execute({ id: userId });
-    return res.json(user);
+      const user = await showAuthenticatedUserService.execute({ id: userId });
+      return res.json(user);
+    } catch {
+      throw new Error("Could not get User Info.");
+    }
   }
 }
 

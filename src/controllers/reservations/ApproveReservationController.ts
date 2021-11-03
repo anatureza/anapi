@@ -12,7 +12,7 @@ class ApproveReservationController {
 
     const approveReservationService = new ApproveReservationService();
 
-    const reservation = approveReservationService.execute({
+    const reservation = await approveReservationService.execute({
       user_id,
       reservation_id,
       scheduled_at,

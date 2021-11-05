@@ -18,7 +18,6 @@ class EditTaskController {
       title,
       description,
       expected_at,
-      done,
     });
 
     return res.json(task);

@@ -10,7 +10,6 @@ interface ITaskRequest {
   title: string;
   description?: string;
   expected_at: Date;
-  done: boolean;
 }
 
 class EditTaskService {
@@ -20,7 +19,6 @@ class EditTaskService {
     title,
     description,
     expected_at,
-    done,
   }: ITaskRequest) {
     const tasksRepository = getCustomRepository(TasksRepository);
     const usersRepository = getCustomRepository(UsersRepository);
@@ -39,8 +37,6 @@ class EditTaskService {
       }
     }
 
-    const done_at = done ? new Date(Date.now()) : "";
-
     try {
       await tasksRepository.update(
         { id: task_id },
@@ -48,8 +44,6 @@ class EditTaskService {
           title,
           description,
           expected_at,
-          done,
-          done_at,
         }
       );
 

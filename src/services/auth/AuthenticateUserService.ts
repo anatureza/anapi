@@ -41,7 +41,12 @@ class AuthenticateUserService {
       }
     );
 
-    return { token, userType: user.type, userId: user.id };
+    return {
+      token,
+      userType: user.type,
+      userId: user.id,
+      userAvatarUrl: `${process.env.APP_API_URL}/uploads/${user.avatar}`,
+    };
   }
 }
 

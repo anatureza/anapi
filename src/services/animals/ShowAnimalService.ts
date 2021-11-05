@@ -11,7 +11,7 @@ class ShowAnimalService {
 
     const animal = await animalsRepository.findOne({
       where: { id },
-      relations: ["user", "address", "images"],
+      relations: ["user", "address", "images", "tasks"],
     });
 
     if (!animal) {

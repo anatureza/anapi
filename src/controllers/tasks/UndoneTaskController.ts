@@ -17,7 +17,7 @@ class UndoneTaskController {
       });
       return res.json(updatedTask);
     } catch {
-      throw new Error("Task Could not be marked as Done.");
+      throw new Error("Task Could not be marked as undone.");
     }
   }
 }

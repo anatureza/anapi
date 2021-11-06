@@ -1,4 +1,4 @@
-import { add, format, isAfter, isSameDay, isValid } from "date-fns";
+import { add, format, isAfter, isSameDay, isValid, parse } from "date-fns";
 
 interface ICheckBirthDate {
   birth_date: string;
@@ -47,4 +47,18 @@ function checkScheduledAtFromAnimalTimestamp(
   return format(scheduledAt, "yyyy-MM-dd kk:mm:ss");
 }
 
-export { checkBirthDate, checkScheduledAtFromAnimalTimestamp };
+function checkExpectedAtTimestamp(expectedAt: string) {
+  if (!isValid(expectedAt)) {
+    throw new Error("Invalid Date");
+  }
+
+  const formatExpectedAt = parse(expectedAt, "yyyy-MM-dd kk:mm:ss", new Date());
+
+  return formatExpectedAt;
+}
+
+export {
+  checkBirthDate,
+  checkScheduledAtFromAnimalTimestamp,
+  checkExpectedAtTimestamp,
+};

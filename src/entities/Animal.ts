@@ -16,6 +16,7 @@ import { config } from "dotenv";
 import { Address } from "./Address";
 import { Image } from "./Image";
 import { User } from "./User";
+import { Task } from "./Task";
 
 config();
 
@@ -87,6 +88,11 @@ class Animal {
   })
   @JoinColumn({ name: "animal_id" })
   images: Image[];
+
+  @OneToMany(() => Task, (task) => task.animal, {
+    cascade: ["remove", "update"],
+  })
+  tasks: Task[];
 
   @Expose({ name: "main_image_url" })
   getAvatarURL(): string | null {

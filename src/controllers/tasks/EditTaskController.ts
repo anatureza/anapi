@@ -12,16 +12,19 @@ class EditTaskController {
 
     const editTaskService = new EditTaskService();
 
-    const task = editTaskService.execute({
-      user_id,
-      task_id,
-      title,
-      description,
-      expected_at,
-      done,
-    });
+    try {
+      const task = await editTaskService.execute({
+        user_id,
+        task_id,
+        title,
+        description,
+        expected_at,
+      });
 
-    return res.json(task);
+      return res.json(task);
+    } catch (err) {
+      throw new Error(`Task Could not be edited. ${err}`);
+    }
   }
 }
 

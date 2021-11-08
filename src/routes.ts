@@ -48,6 +48,8 @@ import { CreateTaskController } from "./controllers/tasks/CreateTaskController";
 import { ListTasksFromAnimalController } from "./controllers/tasks/ListTasksFromAnimalController";
 import { EditTaskController } from "./controllers/tasks/EditTaskController";
 import { DeleteTaskController } from "./controllers/tasks/DeleteTaskController";
+import { DoneTaskController } from "./controllers/tasks/DoneTaskController";
+import { UndoneTaskController } from "./controllers/tasks/UndoneTaskController";
 
 const router = Router();
 
@@ -214,6 +216,18 @@ router.get(
   ensureAuthenticated,
   ensureAtLeastVolunteer,
   new ListTasksFromAnimalController().handle
+);
+router.put(
+  "/task/done/:task_id",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  new DoneTaskController().handle
+);
+router.put(
+  "/task/undone/:task_id",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  new UndoneTaskController().handle
 );
 router.put(
   "/task/:task_id",

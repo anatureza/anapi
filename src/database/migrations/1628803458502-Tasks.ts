@@ -36,7 +36,7 @@ export class Tasks1628803458502 implements MigrationInterface {
           },
           {
             name: "done_at",
-            type: "date",
+            type: "timestamp",
             isNullable: true,
           },
           {

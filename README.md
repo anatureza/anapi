@@ -6,7 +6,7 @@
   <br>
 </h1>
 
-<h4 align="center">The API to publish andd manage animals and adoptions for the <a href="https://www.instagram.com/osamantesdanatureza/" target="_blank">Amantes da Natureza</a>.</h4>
+<h4 align="center">The API to publish and manage animals and their adoptions. Our focus is to help <a href="https://www.instagram.com/osamantesdanatureza/" target="_blank">Amantes da Natureza</a> group.</h4>
 
 <p align="center">
   <a href="https://github.com/anatureza/anapi/blob/main/LICENSE">
@@ -35,7 +35,7 @@ $ git clone https://github.com/anatureza/anapi.git
 $ cd anapi
 
 # Install dependencies
-$ yarn install
+$ yarn
 ```
 
 ## Run the app
@@ -58,10 +58,13 @@ This project is being developed with the following technologies:
 
 - [Node.js](https://nodejs.org/en/)
 - [Typescript](https://www.typescriptlang.org/)
-- [Express](https://expressjs.com/pt-br/)
+- [Express](https://expressjs.com/)
 - [TypeORM](https://typeorm.io/#/)
 - [Insomnia](https://insomnia.rest/)
 - [JSONWebToken](https://github.com/auth0/node-jsonwebtoken#readme)
+- [Handlebars](https://handlebarsjs.com/)
+- [Multer](https://date-fns.org/)
+- [Date-fns](https://date-fns.org/)
 
 # License
 

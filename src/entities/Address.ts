@@ -55,7 +55,7 @@ class Address {
   @Column()
   place: string;
 
-  @Column({ length: "10" })
+  @Column()
   number: string;
 
   @Column()

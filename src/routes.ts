@@ -16,7 +16,7 @@ import { DeleteUserController } from "./controllers/users/DeleteUserController";
 import { DeleteSpecificUserController } from "./controllers/users/DeleteSpecificUserController";
 import { UpdateUserAvatarController } from "./controllers/users/UpdateUserAvatarController";
 
-import { AuthenticateUserController } from "./controllers/auth/AuthenticateUserController";
+import { AuthenticateUserController } from "./controllers/users/AuthenticateUserController";
 
 import { SendForgotPasswordEmailController } from "./controllers/users/SendForgotPasswordEmailController";
 import { ResetPasswordController } from "./controllers/users/ResetPasswordController";

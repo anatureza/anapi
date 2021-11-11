@@ -16,7 +16,6 @@ interface IUserRequest {
   password: string;
   phone_number: string;
   birth_date: string;
-  type?: string;
   authorizes_image?: boolean;
 }
 
@@ -38,7 +37,6 @@ class CreateUserService {
       password,
       phone_number,
       birth_date,
-      type = "user",
       authorizes_image = false,
     }: IUserRequest,
     {
@@ -72,12 +70,16 @@ class CreateUserService {
       throw new Error("Phone number is already in use!");
     }
 
-    type = type.trim().toUpperCase();
-    const enumType = UserType[type];
-
     const formatBirthDate = checkBirthDate({ birth_date });
 
     const passwordHash = await hash(password, 8);
+
+    let enumUserType = UserType.USER;
+    const otherUsers = await usersRepository.find();
+
+    if (otherUsers.length === 0) {
+      enumUserType = UserType.ADMIN;
+    }
 
     const address = await createAddressService.execute({
       place,
@@ -97,7 +99,7 @@ class CreateUserService {
         password: passwordHash,
         phone_number,
         birth_date: formatBirthDate,
-        type: enumType,
+        type: enumUserType,
         authorizes_image,
       });
 

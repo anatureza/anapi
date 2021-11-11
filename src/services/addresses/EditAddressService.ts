@@ -34,6 +34,18 @@ class EditAddressService {
       throw new Error("Address Not Found");
     }
 
+    const zipFormatted = zip.replace(/\D/g, "");
+
+    const validateCEP = /^[0-9]{8}$/;
+
+    if (zipFormatted !== "") {
+      if (!validateCEP.test(zipFormatted)) {
+        throw new Error("ZIP/CEP Format is not Accepted");
+      }
+    } else {
+      throw new Error("Invalid ZIP/CEP");
+    }
+
     if (uf === "") {
       uf = "none";
     }
@@ -49,7 +61,7 @@ class EditAddressService {
           number,
           complement,
           neighborhood,
-          zip,
+          zip: zipFormatted,
           city,
           uf: enumUF,
         }

@@ -29,6 +29,18 @@ class CreateAddressService {
     uf = uf.trim().toUpperCase();
     const enumUF = AddressFederativeUnits[uf];
 
+    const zipFormatted = zip.replace(/\D/g, "");
+
+    const validateCEP = /^[0-9]{8}$/;
+
+    if (zipFormatted !== "") {
+      if (!validateCEP.test(zipFormatted)) {
+        throw new Error("ZIP/CEP Format is not Accepted");
+      }
+    } else {
+      throw new Error("Invalid ZIP/CEP");
+    }
+
     try {
       const address = addressesRepository.create({
         place,

@@ -45,7 +45,10 @@ class AuthenticateUserService {
       token,
       userType: user.type,
       userId: user.id,
-      userAvatarUrl: `${process.env.APP_API_URL}/uploads/${user.avatar}`,
+      userAvatarUrl:
+        user.avatar !== null
+          ? `${process.env.APP_API_URL}/uploads/${user.avatar}`
+          : null,
     };
   }
 }

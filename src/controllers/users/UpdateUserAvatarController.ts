@@ -10,7 +10,10 @@ class UpdateUserAvatarController {
 
     const updateUserAvatarService = new UpdateUserAvatarService();
 
-    const user = updateUserAvatarService.execute({ user_id, requestAvatar });
+    const user = await updateUserAvatarService.execute({
+      user_id,
+      requestAvatar,
+    });
 
     return res.json(user);
   }

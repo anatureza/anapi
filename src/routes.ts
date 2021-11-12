@@ -15,6 +15,8 @@ import { EditUserController } from "./controllers/users/EditUserController";
 import { DeleteUserController } from "./controllers/users/DeleteUserController";
 import { DeleteSpecificUserController } from "./controllers/users/DeleteSpecificUserController";
 import { UpdateUserAvatarController } from "./controllers/users/UpdateUserAvatarController";
+import { UpdateUserToVolunteerController } from "./controllers/users/UpdateUserToVolunteerController";
+import { UpdateVolunteerToUserController } from "./controllers/users/UpdateVolunteerToUserController";
 
 import { AuthenticateUserController } from "./controllers/users/AuthenticateUserController";
 
@@ -91,6 +93,18 @@ router.post(
   new SendForgotPasswordEmailController().handle
 );
 router.post("/user/password/reset", new ResetPasswordController().handle);
+router.patch(
+  "/user/volunteer/:userId",
+  ensureAuthenticated,
+  ensureAdmin,
+  new UpdateUserToVolunteerController().handle
+);
+router.patch(
+  "/user/user/:userId",
+  ensureAuthenticated,
+  ensureAdmin,
+  new UpdateVolunteerToUserController().handle
+);
 
 router.post(
   "/animal",

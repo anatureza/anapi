@@ -6,6 +6,7 @@ import fs from "fs";
 import uploadConfig from "../../config/upload";
 
 import { UsersRepository } from "../../repositories/UsersRepository";
+import { classToPlain } from "class-transformer";
 
 interface IUserAvatarRequest {
   user_id: string;
@@ -35,7 +36,7 @@ class UpdateUserAvatarService {
 
     const updatedUserAvatar = await usersRepository.save(user);
 
-    return updatedUserAvatar;
+    return classToPlain(updatedUserAvatar);
   }
 }
 

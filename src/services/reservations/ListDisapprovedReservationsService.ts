@@ -9,7 +9,7 @@ class ListDisapprovedReservationsService {
 
     const reservations = await reservationsRepository.find({
       where: { status: ReservationStatus.DISAPPROVED },
-      relations: ["animal", "userAdopter"],
+      relations: ["animal", "animal.images", "userAdopter"],
     });
 
     if (reservations.length <= 0) {

@@ -10,7 +10,7 @@ class ListNewReservationsService {
 
     const reservations = await reservationsRepository.find({
       where: { status: ReservationStatus.NEW },
-      relations: ["animal", "animal.images", "userAdopter"],
+      relations: ["animal", "animal.user", "animal.images", "userAdopter"],
     });
 
     if (reservations.length <= 0) {

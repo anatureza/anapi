@@ -1,7 +1,5 @@
 import { classToPlain } from "class-transformer";
 import { getCustomRepository } from "typeorm";
-import { ReservationStatus } from "../../entities/Reservation";
-import { ReservationsQuizRepository } from "../../repositories/ReservationQuizRepository";
 
 import { ReservationsRepository } from "../../repositories/ReservationsRepository";
 
@@ -29,7 +27,7 @@ class ShowReservationService {
       throw new Error("Reservation Does Not Exist!");
     }
 
-    return reservation;
+    return classToPlain(reservation);
   }
 }
 

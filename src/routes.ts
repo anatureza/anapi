@@ -79,7 +79,7 @@ router.delete(
 router.get(
   "/users",
   ensureAuthenticated,
-  ensureAtLeastVolunteer,
+  ensureAdmin,
   new ListAllUsersController().handle
 );
 router.patch(

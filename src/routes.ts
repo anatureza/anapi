@@ -32,6 +32,7 @@ import { ListUnavailableAnimalsController } from "./controllers/animals/ListUnav
 import { EditAnimalController } from "./controllers/animals/EditAnimalController";
 import { DeleteAnimalController } from "./controllers/animals/DeleteAnimalController";
 import { ListAnimalReservationsController } from "./controllers/animals/ListAnimalReservationsController";
+import { ListAllAvailableAnimalsController } from "./controllers/animals/ListAllAvailableAnimalsController";
 
 import { DeleteAnimalImageController } from "./controllers/animals/DeleteAnimalImageController";
 import { UploadAnimalImagesController } from "./controllers/animals/UploadAnimalImagesController";
@@ -119,6 +120,10 @@ router.get(
   ensureAuthenticated,
   ensureAtLeastVolunteer,
   new ListAnimalsFromAuthUserController().handle
+);
+router.get(
+  "/available-animals",
+  new ListAllAvailableAnimalsController().handle
 );
 router.get(
   "/animals/available",

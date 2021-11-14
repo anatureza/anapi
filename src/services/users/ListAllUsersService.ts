@@ -8,6 +8,7 @@ class ListAllUsersService {
 
     const users = await usersRepository.find({
       relations: ["address"],
+      order: { created_at: "DESC" },
     });
 
     return classToPlain(users);

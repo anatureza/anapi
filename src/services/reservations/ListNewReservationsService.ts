@@ -10,10 +10,11 @@ class ListNewReservationsService {
 
     const reservations = await reservationsRepository.find({
       where: { status: ReservationStatus.NEW },
+      order: { created_at: "ASC" },
       relations: ["animal", "animal.user", "animal.images", "userAdopter"],
     });
 
-    if (reservations.length <= 0) {
+    if (!reservations || reservations.length <= 0) {
       return [];
     }
 

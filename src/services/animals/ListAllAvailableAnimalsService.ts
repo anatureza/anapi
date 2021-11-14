@@ -8,10 +8,11 @@ class ListAllAvailableAnimalsService {
 
     const animals = await animalsRepository.find({
       where: { available: true },
+      order: { created_at: "ASC" },
       relations: ["user", "address", "images"],
     });
 
-    if (!animals) {
+    if (!animals || animals.length === 0) {
       return [];
     }
 

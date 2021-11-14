@@ -7,10 +7,11 @@ class ListAnimalsService {
     const animalsRepository = getCustomRepository(AnimalsRepository);
 
     const animals = await animalsRepository.find({
+      order: { created_at: "ASC" },
       relations: ["user", "address", "images"],
     });
 
-    if (!animals) {
+    if (!animals || animals.length === 0) {
       return [];
     }
 

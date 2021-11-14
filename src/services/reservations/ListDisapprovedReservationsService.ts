@@ -9,6 +9,7 @@ class ListDisapprovedReservationsService {
 
     const reservations = await reservationsRepository.find({
       where: { status: ReservationStatus.DISAPPROVED },
+      order: { updated_at: "DESC" },
       relations: ["animal", "animal.user", "animal.images", "userAdopter"],
     });
 

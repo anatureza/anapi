@@ -12,6 +12,7 @@ class ListAvailableAnimalsService {
 
     const animals = await animalsRepository.find({
       where: { volunteer_id, available: true },
+      order: { created_at: "ASC" },
       relations: ["user", "address", "images"],
     });
 

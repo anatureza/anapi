@@ -1,12 +1,10 @@
 import { getCustomRepository, Not } from "typeorm";
-import { format } from "date-fns";
+import { format, isAfter, isBefore } from "date-fns";
 
 import { ReservationStatus } from "../../entities/Reservation";
 import { UserType } from "../../entities/User";
 import { ReservationsRepository } from "../../repositories/ReservationsRepository";
 import { UsersRepository } from "../../repositories/UsersRepository";
-
-import { checkScheduledAtFromAnimalTimestamp } from "../../utils/verifyDate";
 
 interface IReservationRequest {
   reservation_id: string;
@@ -41,31 +39,27 @@ class ApproveReservationService {
       }
     }
 
-    let formatScheduledAt = format(
-      new Date(scheduled_at),
-      "yyyy-MM-dd kk:mm:ss"
-    );
-
-    const otherReservationsFromAnimal = await reservationsRepository.find({
+    const lastReservation = await reservationsRepository.findOne({
       where: {
         id: Not(reservation_id),
         animal_id: reservation.animal_id,
-        scheduled_at: Not(null),
+        status: ReservationStatus.APPROVED,
       },
+      order: { scheduled_at: "DESC" },
     });
 
-    if (otherReservationsFromAnimal) {
-      const datesToCompare = otherReservationsFromAnimal.map(
-        (otherReservation) => {
-          return otherReservation.scheduled_at.toString();
-        }
-      );
+    if (lastReservation) {
+      const lastScheduledAt = new Date(lastReservation.scheduled_at);
 
-      formatScheduledAt = checkScheduledAtFromAnimalTimestamp(
-        scheduled_at,
-        datesToCompare
-      );
+      if (isBefore(new Date(scheduled_at), lastScheduledAt)) {
+        throw new Error("There is already a reservation scheduled after");
+      }
     }
+
+    const formatScheduledAt = format(
+      new Date(scheduled_at),
+      "yyyy-MM-dd HH:mm:ss"
+    );
 
     try {
       await reservationsRepository.update(

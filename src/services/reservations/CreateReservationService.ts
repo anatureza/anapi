@@ -60,6 +60,10 @@ class CreateReservationService {
       throw new Error("Animal Does Not Exist!");
     }
 
+    if (!animal.available) {
+      throw new Error("Animal already adopted!");
+    }
+
     const quiz = reservationsQuizRepository.create({
       first,
       second,

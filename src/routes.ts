@@ -46,6 +46,7 @@ import { ListApprovedReservationsController } from "./controllers/reservations/L
 import { ListDisapprovedReservationsController } from "./controllers/reservations/ListDisapprovedReservationsController";
 import { ShowReservationController } from "./controllers/reservations/ShowReservationController";
 import { ShowAdoptedReservationFromAnimalIdController } from "./controllers/reservations/ShowAdoptedReservationFromAnimalIdController";
+import { ShowLastScheduledAtFromAnimalIdController } from "./controllers/reservations/ShowLastScheduledAtFromAnimalIdController";
 
 import { CreateTaskController } from "./controllers/tasks/CreateTaskController";
 import { ListTasksFromAnimalController } from "./controllers/tasks/ListTasksFromAnimalController";
@@ -180,6 +181,12 @@ router.get(
   ensureAuthenticated,
   ensureAtLeastVolunteer,
   new ShowReservationController().handle
+);
+router.get(
+  "/reservation/last/:animal_id",
+  ensureAuthenticated,
+  ensureAtLeastVolunteer,
+  new ShowLastScheduledAtFromAnimalIdController().handle
 );
 router.post(
   "/reservation/approve/:reservation_id",

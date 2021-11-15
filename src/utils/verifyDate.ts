@@ -44,7 +44,7 @@ function checkScheduledAtFromAnimalTimestamp(
     }
   }
 
-  return format(scheduledAt, "yyyy-MM-dd kk:mm:ss");
+  return format(scheduledAt, "yyyy-MM-dd HH:mm:ss");
 }
 
 function checkExpectedAtTimestamp(expectedAt: string) {
@@ -52,7 +52,7 @@ function checkExpectedAtTimestamp(expectedAt: string) {
     throw new Error("Invalid Date");
   }
 
-  const formatExpectedAt = parse(expectedAt, "yyyy-MM-dd kk:mm:ss", new Date());
+  const formatExpectedAt = parse(expectedAt, "yyyy-MM-dd HH:mm:ss", new Date());
 
   return formatExpectedAt;
 }

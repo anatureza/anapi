@@ -17,9 +17,8 @@ class ShowLastScheduledAtFromAnimalIdService {
     });
 
     if (!reservation) {
-      throw new Error("Reservation Does not Exist!");
+      return true;
     }
-    console.log(reservation);
 
     const lastScheduledAt = reservation.scheduled_at;
 

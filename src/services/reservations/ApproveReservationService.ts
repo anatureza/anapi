@@ -39,6 +39,14 @@ class ApproveReservationService {
       }
     }
 
+    const scheduledAt = new Date(scheduled_at);
+
+    if (isBefore(scheduledAt, Date.now())) {
+      throw new Error(
+        "Invalid schedule: reservation can only be scheduled in the future."
+      );
+    }
+
     const lastReservation = await reservationsRepository.findOne({
       where: {
         id: Not(reservation_id),
@@ -56,10 +64,7 @@ class ApproveReservationService {
       }
     }
 
-    const formatScheduledAt = format(
-      new Date(scheduled_at),
-      "yyyy-MM-dd HH:mm:ss"
-    );
+    const formatScheduledAt = format(scheduledAt, "yyyy-MM-dd HH:mm:ss");
 
     try {
       await reservationsRepository.update(

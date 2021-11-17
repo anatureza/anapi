@@ -1,5 +1,5 @@
 import { getCustomRepository, Not } from "typeorm";
-import { format, isAfter, isBefore } from "date-fns";
+import { format, isAfter, isBefore, isEqual } from "date-fns";
 
 import { ReservationStatus } from "../../entities/Reservation";
 import { UserType } from "../../entities/User";
@@ -51,16 +51,20 @@ class ApproveReservationService {
       where: {
         id: Not(reservation_id),
         animal_id: reservation.animal_id,
-        status: ReservationStatus.APPROVED,
       },
       order: { scheduled_at: "DESC" },
     });
 
     if (lastReservation) {
-      const lastScheduledAt = new Date(lastReservation.scheduled_at);
+      if (lastReservation.scheduled_at !== null) {
+        const lastScheduledAt = new Date(lastReservation.scheduled_at);
 
-      if (isBefore(new Date(scheduled_at), lastScheduledAt)) {
-        throw new Error("There is already a reservation scheduled after");
+        if (
+          isBefore(scheduledAt, lastScheduledAt) ||
+          isEqual(scheduledAt, lastScheduledAt)
+        ) {
+          throw new Error("There is already a reservation scheduled after");
+        }
       }
     }
 
